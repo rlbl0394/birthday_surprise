@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Games - Birthday Surprise{% endblock %}
+
+{% block body_class %}games-menu-bg{% endblock %}
+
+{% block content %}
+<div class="games-menu-container">
+    <h1 class="games-title" data-translate="games_title">🎮 Birthday Games</h1>
+    <p class="games-subtitle" data-translate="games_subtitle">Choose a game to play!</p>
+    
+    <div class="games-grid">
+        <div class="game-card">
+            <div class="game-icon">🥠</div>
+            <h2 data-translate="fortune_cookie_title">Fortune Cookie</h2>
+            <p data-translate="fortune_cookie_desc">Open fortune cookies to reveal inspirational messages!</p>
+            <a href="/fortune_cookie" class="game-button" data-translate="play_button" onmouseenter="playHoverSound()" onclick="playClickSound()">Play</a>
+        </div>
+        
+        <div class="game-card">
+            <div class="game-icon">💥</div>
+            <h2 data-translate="emoji_pop_title">Emoji Pop</h2>
+            <p data-translate="emoji_pop_desc">Pop as many emojis as you can in 30 seconds!</p>
+            <a href="/emoji_pop" class="game-button" data-translate="play_button" onmouseenter="playHoverSound()" onclick="playClickSound()">Play</a>
+        </div>
+        
+        <div class="game-card">
+            <div class="game-icon">🧺</div>
+            <h2 data-translate="emoji_catch_title">Emoji Catch</h2>
+            <p data-translate="emoji_catch_desc">Catch falling emojis in your basket!</p>
+            <a href="/emoji_catch" class="game-button" data-translate="play_button" onmouseenter="playHoverSound()" onclick="playClickSound()">Play</a>
+        </div>
+    </div>
+    
+    <div class="back-nav">
+        <a href="/" class="back-button" data-translate="back_home">← Back to Home</a>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/games.js') }}"></script>
+{% endblock %}

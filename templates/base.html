@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Happy Birthday Michelle{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/games.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}autumn-base{% endblock %}">
+    <div class="particles-container" id="particles"></div>
+    
+    <div class="content-wrapper">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <button class="music-toggle" id="musicToggle" onclick="toggleMusic()" title="Toggle Music">
+        🔊
+    </button>
+    
+    <div class="language-selector">
+        <button class="language-toggle" id="languageToggle" onclick="toggleLanguageMenu()" title="Change Language">
+            🌐
+        </button>
+        <div class="language-menu" id="languageMenu">
+            <button onclick="translatePage('en')" class="lang-option active" data-lang="en">English</button>
+            <button onclick="translatePage('es')" class="lang-option" data-lang="es">Español</button>
+            <button onclick="translatePage('zh')" class="lang-option" data-lang="zh">中文</button>
+            <button onclick="translatePage('fr')" class="lang-option" data-lang="fr">Français</button>
+            <button onclick="translatePage('hi')" class="lang-option" data-lang="hi">हिन्दी</button>
+            <button onclick="translatePage('tl')" class="lang-option" data-lang="tl">Filipino</button>
+            <button onclick="translatePage('ja')" class="lang-option" data-lang="ja">日本語</button>
+        </div>
+    </div>
+    
+    <div class="credit-footer" data-translate="credit_footer">
+        Created by Rebecca Bacho Lorenzo
+    </div>
+
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

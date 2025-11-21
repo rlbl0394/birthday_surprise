@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Fortune Cookie - Birthday Surprise{% endblock %}
+
+{% block body_class %}fortune-cookie-bg{% endblock %}
+
+{% block content %}
+<div class="fortune-game-container">
+    <h1 class="game-title" data-translate="fortune_game_title">🥠 Fortune Cookie</h1>
+    <p class="game-instructions" data-translate="fortune_instructions">Click on the fortune cookie to reveal your message!</p>
+    
+    <div class="cookies-container" id="cookies-container">
+        <!-- Fortune cookie will be generated here -->
+    </div>
+    
+    <div class="fortune-display" id="fortune-display" style="display: none;">
+        <div class="fortune-content">
+            <div class="fortune-icon">✨</div>
+            <p class="fortune-message" id="fortune-message"></p>
+            <a href="/games" class="next-fortune-btn" data-translate="back_games">← Back to Games</a>
+        </div>
+    </div>
+    
+    <div class="game-nav">
+        <a href="/games" class="back-button" data-translate="back_games">← Back to Games</a>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/fortune_cookie.js') }}"></script>
+{% endblock %}

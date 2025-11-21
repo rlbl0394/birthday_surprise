@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Best Wishes, Michelle!{% endblock %}
+
+{% block body_class %}autumn-base ending-page{% endblock %}
+
+{% block content %}
+<div class="ending-container fade-in">
+    <div class="ending-content">
+        <h1 class="ending-title" data-translate="ending_title">Wishing you the best year ahead,<br><span class="name-highlight">Michelle!</span></h1>
+        <p class="ending-subtitle" data-translate="ending_subtitle">May this year bring you joy, success, and wonderful memories.</p>
+        <div class="ending-decoration" id="cakeReveal" style="display: none;">✨ 🎂 ✨</div>
+        <button class="btn-primary" id="giftButton" onclick="revealGift()" style="margin-bottom: 20px;" data-translate="gift_button">
+            🎁 Click here to receive gift
+        </button>
+        <div id="endingButtons" style="display: none;">
+            <a href="{{ url_for('games') }}" class="btn-primary btn-secondary btn-games" data-translate="play_games" style="margin-right: 15px;">
+                🎮 Play Games
+            </a>
+            <a href="{{ url_for('home') }}" class="btn-secondary" data-translate="back_beginning">
+                Back to Beginning
+            </a>
+        </div>
+    </div>
+</div>
+<div id="confettiContainer"></div>
+<div id="balloonContainer"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize mixed seasonal particles for ending page
+    initMixedParticles();
+    
+    // Play birthday song
+    playBirthdaySong();
+    
+    function revealGift() {
+        const giftButton = document.getElementById('giftButton');
+        const cakeReveal = document.getElementById('cakeReveal');
+        const endingButtons = document.getElementById('endingButtons');
+        
+        // Play sparkle/magic sound
+        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3');
+        audio.volume = 0.25;
+        audio.play().catch(() => {}); // Ignore errors if audio fails
+        
+        // Hide button with animation
+        giftButton.style.transform = 'scale(0)';
+        giftButton.style.opacity = '0';
+        
+        setTimeout(() => {
+            giftButton.style.display = 'none';
+            cakeReveal.style.display = 'block';
+            cakeReveal.style.animation = 'cakeAppear 1s ease-out';
+            endingButtons.style.display = 'block';
+            endingButtons.style.animation = 'fadeIn 1s ease-in';
+            
+            // Launch celebrations
+            createConfetti();
+            createBalloons();
+        }, 300);
+    }
+    
+    function createConfetti() {
+        const container = document.getElementById('confettiContainer');
+        const confettiCount = 100;
+        const colors = ['#FFD700', '#FF69B4', '#87CEEB', '#98FB98', '#DDA0DD', '#F0E68C'];
+        
+        for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 0.5 + 's';
+            confetti.style.animationDuration = (2 + Math.random() * 3) + 's';
+            container.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 5000);
+        }
+    }
+    
+    function createBalloons() {
+        const container = document.getElementById('balloonContainer');
+        const balloonCount = 15;
+        const balloonEmojis = ['🎈', '🎈', '🎈'];
+        
+        for (let i = 0; i < balloonCount; i++) {
+            const balloon = document.createElement('div');
+            balloon.classList.add('balloon');
+            balloon.innerHTML = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
+            balloon.style.left = (10 + Math.random() * 80) + '%';
+            balloon.style.fontSize = (2 + Math.random() * 2) + 'rem';
+            balloon.style.animationDelay = (Math.random() * 2) + 's';
+            balloon.style.animationDuration = (4 + Math.random() * 3) + 's';
+            container.appendChild(balloon);
+            
+            setTimeout(() => balloon.remove(), 8000);
+        }
+    }
+</script>
+{% endblock %}

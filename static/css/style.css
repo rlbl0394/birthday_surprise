@@ -1,0 +1,1603 @@
+/* ==========================================
+   GLOBAL STYLES & RESET
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    transition: background 0.8s ease;
+}
+
+/* Animated gradient background for games menu */
+body.games-menu-bg {
+    background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    position: relative;
+}
+
+body.games-menu-bg::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 255, 255, 0.03) 35px, rgba(255, 255, 255, 0.03) 70px),
+        repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255, 255, 255, 0.02) 35px, rgba(255, 255, 255, 0.02) 70px);
+    animation: textureMove 20s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes textureMove {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(50px, 50px);
+    }
+}
+
+/* Subtle animated backgrounds for game pages */
+body.fortune-cookie-bg {
+    background: linear-gradient(-45deg, #81C784, #66BB6A, #4CAF50, #66BB6A);
+    background-size: 300% 300%;
+    animation: gradientShift 20s ease infinite;
+    position: relative;
+}
+
+body.fortune-cookie-bg::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255, 255, 255, 0.015) 40px, rgba(255, 255, 255, 0.015) 80px);
+    animation: textureMove 30s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+body.emoji-pop-bg {
+    background: linear-gradient(-45deg, #FF6B9D, #C06C84, #F67280, #C06C84);
+    background-size: 300% 300%;
+    animation: gradientShift 20s ease infinite;
+    position: relative;
+}
+
+body.emoji-pop-bg::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255, 255, 255, 0.015) 40px, rgba(255, 255, 255, 0.015) 80px);
+    animation: textureMove 30s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+body.emoji-catch-bg {
+    background: linear-gradient(-45deg, #4FC3F7, #29B6F6, #03A9F4, #29B6F6);
+    background-size: 300% 300%;
+    animation: gradientShift 20s ease infinite;
+    position: relative;
+}
+
+body.emoji-catch-bg::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255, 255, 255, 0.015) 40px, rgba(255, 255, 255, 0.015) 80px);
+    animation: textureMove 30s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+}
+
+/* ==========================================
+   PARTICLES CONTAINER
+   ========================================== */
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.particle {
+    position: fixed;
+    pointer-events: auto;
+    cursor: grab;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    z-index: 1000;
+    user-select: none;
+    transition: none;
+}
+
+/* ==========================================
+   CONTENT WRAPPER
+   ========================================== */
+.content-wrapper {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    pointer-events: none;
+}
+
+.content-wrapper > * {
+    pointer-events: auto;
+}
+
+/* ==========================================
+   CREDIT FOOTER
+   ========================================== */
+.credit-footer {
+    position: fixed;
+    bottom: 15px;
+    left: 20px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    z-index: 1000;
+    pointer-events: none;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    font-family: 'Lato', sans-serif;
+}
+
+/* ==========================================
+   MUSIC TOGGLE BUTTON
+   ========================================== */
+.music-toggle {
+    position: fixed;
+    bottom: 15px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 1.3rem;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-Content: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.music-toggle:hover {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.music-toggle:active {
+    transform: scale(0.95);
+}
+
+.music-toggle.muted {
+    opacity: 0.6;
+}
+
+/* ==========================================
+   LANGUAGE SELECTOR
+   ========================================== */
+.language-selector {
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.language-toggle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.language-toggle:hover {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.language-toggle:active {
+    transform: scale(0.95);
+}
+
+.language-menu {
+    position: absolute;
+    bottom: 55px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 12px;
+    padding: 8px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 140px;
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.language-menu.show {
+    display: flex;
+    animation: fadeInUp 0.3s ease;
+}
+
+.lang-option {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 400;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-family: 'Lato', sans-serif;
+}
+
+.lang-option:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-3px);
+}
+
+.lang-option.active {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+    font-weight: 500;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================
+   THEME BACKGROUNDS
+   ========================================== */
+
+/* Autumn (Default/Base) - Warm browns, oranges, golds */
+.autumn-base, .autumn-theme {
+    background: linear-gradient(135deg, #8B4513 0%, #D2691E 50%, #CD853F 100%);
+    position: relative;
+}
+
+.autumn-base::before, .autumn-theme::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 30px,
+            rgba(139, 69, 19, 0.2) 30px,
+            rgba(139, 69, 19, 0.2) 32px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 30px,
+            rgba(205, 133, 63, 0.18) 30px,
+            rgba(205, 133, 63, 0.18) 32px
+        );
+    background-size: 100% 100%, 100% 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Home and Ending - All 4 seasons combined */
+.home-page, .ending-page {
+    background: linear-gradient(
+        135deg,
+        #FFD700 0%,      /* Summer - Golden yellow */
+        #FFA500 12%,     /* Summer - Orange */
+        #D2691E 25%,     /* Autumn - Chocolate */
+        #CD853F 37%,     /* Autumn - Peru */
+        #81D4FA 50%,     /* Winter - Light blue */
+        #B3E5FC 62%,     /* Winter - Sky blue */
+        #81C784 75%,     /* Spring - Green */
+        #A5D6A7 87%,     /* Spring - Light green */
+        #FFD700 100%     /* Back to summer */
+    );
+    background-size: 200% 200%;
+    animation: seasonalShift 20s ease infinite;
+    position: relative;
+}
+
+.home-page::before, .ending-page::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(
+        circle at 15% 20%,
+        rgba(255, 255, 255, 0.1) 2px,
+        transparent 2px
+    ),
+    radial-gradient(
+        circle at 85% 80%,
+        rgba(255, 255, 255, 0.08) 3px,
+        transparent 3px
+    ),
+    repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 100px,
+        rgba(255, 255, 255, 0.03) 100px,
+        rgba(255, 255, 255, 0.03) 200px
+    );
+    background-size: 70px 70px, 90px 90px, 200px 200px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes seasonalShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Summer - Bright, sunny yellows and warm tones */
+.summer-theme {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+    position: relative;
+}
+
+.summer-theme::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 60px,
+        rgba(255, 255, 255, 0.05) 60px,
+        rgba(255, 255, 255, 0.05) 120px
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Winter - Cool whites, soft blues, silver */
+.winter-theme {
+    background: linear-gradient(135deg, #E0F2F7 0%, #B3E5FC 50%, #81D4FA 100%);
+    position: relative;
+}
+
+.winter-theme::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(30deg, transparent 48%, rgba(255, 255, 255, 0.1) 48%, rgba(255, 255, 255, 0.1) 52%, transparent 52%),
+        linear-gradient(-30deg, transparent 48%, rgba(255, 255, 255, 0.08) 48%, rgba(255, 255, 255, 0.08) 52%, transparent 52%);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Spring - Fresh greens, soft pinks, light pastels */
+.spring-theme {
+    background: linear-gradient(135deg, #C8E6C9 0%, #A5D6A7 50%, #81C784 100%);
+    position: relative;
+}
+
+.spring-theme::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 40px,
+            rgba(129, 199, 132, 0.2) 40px,
+            rgba(129, 199, 132, 0.2) 44px,
+            transparent 44px,
+            transparent 80px
+        ),
+        repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 40px,
+            rgba(165, 214, 167, 0.15) 40px,
+            rgba(165, 214, 167, 0.15) 44px,
+            transparent 44px,
+            transparent 80px
+        ),
+        radial-gradient(
+            circle at 30% 60%,
+            rgba(200, 230, 201, 0.25) 8px,
+            transparent 8px
+        );
+    background-size: 100% 100%, 100% 100%, 120px 120px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ==========================================
+   HOME PAGE STYLES
+   ========================================== */
+.home-container {
+    text-align: center;
+    max-width: 700px;
+}
+
+.home-content {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 80px 70px;
+    border-radius: 30px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35),
+                inset 0 0 0 3px rgba(210, 105, 30, 0.3),
+                inset 0 0 30px rgba(255, 215, 0, 0.1);
+    backdrop-filter: blur(15px);
+    border: 4px solid transparent;
+    background-image: 
+        linear-gradient(135deg, rgba(255, 248, 220, 0.3), rgba(255, 235, 205, 0.2), rgba(255, 248, 220, 0.3)),
+        linear-gradient(135deg, #FFD700, #D2691E, #CD853F, #FFD700);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    position: relative;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.home-content:hover {
+    box-shadow: 0 35px 100px rgba(210, 105, 30, 0.7),
+                0 0 100px rgba(255, 215, 0, 0.8),
+                inset 0 0 60px rgba(255, 215, 0, 0.4);
+    transform: translateY(-5px);
+}
+
+.birthday-title {
+    font-size: 4.5rem;
+    color: #2C1810;
+    margin-bottom: 15px;
+    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+    font-weight: 700;
+}
+
+.name-highlight {
+    color: #FFFFFF;
+    font-weight: 700;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3),
+                 0 0 20px rgba(210, 105, 30, 0.6);
+}
+
+.subtitle {
+    font-size: 1.6rem;
+    color: #3E2723;
+    margin-bottom: 25px;
+    font-weight: 400;
+}
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+.btn-primary, .btn-secondary {
+    display: inline-block;
+    padding: 18px 40px;
+    font-size: 1.2rem;
+    font-weight: 400;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ripple effect for button clicks */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple-animation 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Sparkle effect for button clicks */
+.sparkle {
+    position: absolute;
+    font-size: 1.2rem;
+    pointer-events: none;
+    animation: sparkle-burst 0.8s ease-out forwards;
+    z-index: 1000;
+}
+
+@keyframes sparkle-burst {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(
+            calc(cos(var(--angle)) * var(--distance)),
+            calc(sin(var(--angle)) * var(--distance))
+        ) scale(1.5) rotate(180deg);
+        opacity: 0;
+    }
+}
+
+/* Button heartbeat animation */
+@keyframes button-heartbeat {
+    0%, 100% {
+        transform: translateY(-5px) scale(1.05);
+    }
+    14% {
+        transform: translateY(-5px) scale(1.08);
+    }
+    28% {
+        transform: translateY(-5px) scale(1.05);
+    }
+    42% {
+        transform: translateY(-5px) scale(1.08);
+    }
+    56%, 70% {
+        transform: translateY(-5px) scale(1.05);
+    }
+}
+
+/* Confetti and Balloon styles */
+#confettiContainer, #balloonContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    animation: confetti-fall linear forwards;
+}
+
+@keyframes confetti-fall {
+    to {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+.balloon {
+    position: absolute;
+    bottom: -100px;
+    animation: balloon-rise ease-out forwards;
+}
+
+@keyframes balloon-rise {
+    to {
+        transform: translateY(-110vh) translateX(30px);
+        opacity: 0;
+    }
+}
+
+/* Cake appear animation */
+@keyframes cakeAppear {
+    0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) rotate(10deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #D2691E, #CD853F);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(210, 105, 30, 0.8);
+    background: linear-gradient(135deg, #C1581D, #BC744E);
+    animation: button-heartbeat 1.5s ease-in-out infinite;
+}
+
+.btn-primary:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.1s ease;
+    animation: none;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #8B4513, #A0522D);
+    color: white;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(139, 69, 19, 0.8);
+    animation: button-heartbeat 1.5s ease-in-out infinite;
+}
+
+.btn-secondary:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.1s ease;
+    animation: none;
+}
+
+.btn-games {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.btn-games:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(102, 126, 234, 0.8);
+    background: linear-gradient(135deg, #5568d3, #6a3f91);
+    animation: button-heartbeat 1.5s ease-in-out infinite;
+}
+
+.btn-games:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.1s ease;
+    animation: none;
+}
+
+/* ==========================================
+   MESSAGE PAGE STYLES
+   ========================================== */
+.message-container {
+    max-width: 800px;
+    width: 100%;
+}
+
+.message-card {
+    background: rgba(255, 255, 255, 0.97);
+    padding: 50px 45px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Theme-specific message card designs */
+
+/* Summer Theme - Bright and sunny with warm accents */
+.summer-theme .message-card {
+    border: 5px solid transparent;
+    background-image: 
+        linear-gradient(135deg, rgba(255, 253, 230, 0.3), rgba(255, 251, 210, 0.25), rgba(255, 253, 230, 0.3)),
+        linear-gradient(135deg, #FFF176, #FFEB3B, #FDD835, #FFF176);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 
+        0 25px 70px rgba(255, 241, 118, 0.4),
+        inset 0 0 40px rgba(255, 249, 196, 0.15);
+    border-radius: 20px;
+    padding: 50px 45px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.summer-theme .message-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 40px,
+        rgba(255, 235, 59, 0.08) 40px,
+        rgba(255, 235, 59, 0.08) 80px
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+.summer-theme .message-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.summer-theme .message-card:hover {
+    box-shadow: 
+        0 35px 120px rgba(255, 241, 118, 1),
+        0 0 120px rgba(255, 249, 196, 1),
+        0 0 80px rgba(255, 249, 196, 0.9),
+        0 0 40px rgba(255, 249, 196, 0.8),
+        inset 0 0 100px rgba(255, 249, 196, 0.6);
+    transform: translateY(-5px);
+}
+
+.summer-theme .message-card::before {
+    content: '☀️';
+    position: absolute;
+    font-size: 18rem;
+    opacity: 0.08;
+    top: 20%;
+    right: -50px;
+    pointer-events: none;
+    transform: translateY(-50%);
+    animation: sun-rotate 15s linear infinite;
+}
+
+.summer-theme .message-card::after {
+    content: '☀️';
+    position: absolute;
+    font-size: 10rem;
+    opacity: 0.06;
+    bottom: -30px;
+    left: -30px;
+    pointer-events: none;
+    animation: sun-rotate 20s linear infinite reverse;
+}
+
+@keyframes sun-rotate {
+    from {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+.summer-theme .sender-name {
+    color: #FF8C00;
+    text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+/* Autumn Theme - Warm browns and golden tones */
+.autumn-theme .message-card {
+    border: 4px solid transparent;
+    background-image: 
+        linear-gradient(135deg, rgba(250, 235, 215, 0.3), rgba(245, 222, 179, 0.25), rgba(250, 235, 215, 0.3)),
+        linear-gradient(135deg, #D2691E, #CD853F, #DAA520, #D2691E);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 
+        0 25px 70px rgba(210, 105, 30, 0.4),
+        inset 0 0 40px rgba(218, 165, 32, 0.15);
+    border-radius: 20px;
+    padding: 50px 45px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.autumn-theme .message-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(
+        circle at 20% 30%,
+        rgba(205, 133, 63, 0.1) 2px,
+        transparent 2px
+    ),
+    radial-gradient(
+        circle at 60% 70%,
+        rgba(218, 165, 32, 0.08) 3px,
+        transparent 3px
+    ),
+    radial-gradient(
+        circle at 80% 20%,
+        rgba(210, 105, 30, 0.12) 2px,
+        transparent 2px
+    );
+    background-size: 60px 60px, 80px 80px, 100px 100px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.autumn-theme .message-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.autumn-theme .message-card:hover {
+    box-shadow: 
+        0 35px 120px rgba(210, 105, 30, 1),
+        0 0 120px rgba(218, 165, 32, 1),
+        0 0 80px rgba(218, 165, 32, 0.9),
+        0 0 40px rgba(218, 165, 32, 0.8),
+        inset 0 0 100px rgba(218, 165, 32, 0.6);
+    transform: translateY(-5px);
+}
+
+.autumn-theme .message-card::before {
+    content: '🍂';
+    position: absolute;
+    font-size: 18rem;
+    opacity: 0.08;
+    top: 20%;
+    right: -50px;
+    pointer-events: none;
+    transform: translateY(-50%);
+    animation: leaf-spin 12s linear infinite;
+}
+
+.autumn-theme .message-card::after {
+    content: '🍁';
+    position: absolute;
+    font-size: 12rem;
+    opacity: 0.06;
+    top: -40px;
+    left: -40px;
+    pointer-events: none;
+    animation: leaf-spin 8s linear infinite reverse;
+}
+
+@keyframes leaf-spin {
+    from {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+.autumn-theme .sender-name {
+    color: #8B4513;
+    text-shadow: 2px 2px 4px rgba(210, 105, 30, 0.3);
+}
+
+/* Winter Theme - Cool blues and icy whites */
+.winter-theme .message-card {
+    border: 5px solid transparent;
+    background-image: 
+        linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(252, 252, 252, 0.9), rgba(255, 255, 255, 0.95)),
+        linear-gradient(135deg, #D3D3D3, #C0C0C0, #A8A8A8, #B8B8B8, #D3D3D3);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 
+        0 25px 70px rgba(192, 192, 192, 0.5),
+        inset 0 0 40px rgba(200, 200, 200, 0.15);
+    border-radius: 20px;
+    padding: 50px 45px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.winter-theme .message-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(30deg, transparent 45%, rgba(189, 189, 189, 0.1) 45%, rgba(189, 189, 189, 0.1) 55%, transparent 55%),
+        linear-gradient(-30deg, transparent 45%, rgba(158, 158, 158, 0.08) 45%, rgba(158, 158, 158, 0.08) 55%, transparent 55%);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.winter-theme .message-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.winter-theme .message-card:hover {
+    box-shadow: 
+        0 35px 120px rgba(192, 192, 192, 1),
+        0 0 120px rgba(200, 200, 200, 1),
+        0 0 80px rgba(200, 200, 200, 1),
+        0 0 40px rgba(200, 200, 200, 0.9),
+        inset 0 0 100px rgba(200, 200, 200, 0.6);
+    transform: translateY(-5px);
+}
+
+.winter-theme .message-card::before {
+    content: '❄️';
+    position: absolute;
+    font-size: 18rem;
+    opacity: 0.08;
+    top: 20%;
+    right: -50px;
+    pointer-events: none;
+    transform: translateY(-50%);
+    animation: snowflake-spin 20s linear infinite;
+}
+
+.winter-theme .message-card::after {
+    content: '❄️';
+    position: absolute;
+    font-size: 11rem;
+    opacity: 0.06;
+    top: -35px;
+    left: -35px;
+    pointer-events: none;
+    animation: snowflake-spin 25s linear infinite reverse;
+}
+
+@keyframes snowflake-spin {
+    from {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+.winter-theme .sender-name {
+    color: #0277BD;
+    text-shadow: 2px 2px 4px rgba(129, 212, 250, 0.3);
+}
+
+/* Spring Theme - Fresh greens and soft pinks */
+.spring-theme .message-card {
+    border: 4px solid transparent;
+    background-image: 
+        linear-gradient(135deg, rgba(255, 245, 250, 0.25), rgba(255, 240, 248, 0.2), rgba(255, 245, 250, 0.25)),
+        linear-gradient(135deg, #FFCCE5, #FFB3D9, #FFC9E0, #FFCCE5);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 
+        0 25px 70px rgba(255, 179, 217, 0.4),
+        inset 0 0 40px rgba(255, 204, 229, 0.15);
+    border-radius: 20px;
+    padding: 50px 45px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.spring-theme .message-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(
+        circle at 25% 25%,
+        rgba(255, 179, 217, 0.12) 3px,
+        transparent 3px
+    ),
+    radial-gradient(
+        circle at 75% 75%,
+        rgba(255, 204, 229, 0.1) 2px,
+        transparent 2px
+    );
+    background-size: 70px 70px, 90px 90px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.spring-theme .message-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.spring-theme .message-card:hover {
+    box-shadow: 
+        0 35px 120px rgba(255, 179, 217, 1),
+        0 0 120px rgba(255, 204, 229, 1),
+        0 0 80px rgba(255, 204, 229, 1),
+        0 0 40px rgba(255, 204, 229, 0.9),
+        inset 0 0 100px rgba(255, 204, 229, 0.6);
+    transform: translateY(-5px);
+}
+
+.spring-theme .message-card::before {
+    content: '🌸';
+    position: absolute;
+    font-size: 18rem;
+    opacity: 0.08;
+    top: 20%;
+    right: -50px;
+    pointer-events: none;
+    transform: translateY(-50%);
+    animation: blossom-spin 10s linear infinite;
+}
+
+.spring-theme .message-card::after {
+    content: '🌺';
+    position: absolute;
+    font-size: 13rem;
+    opacity: 0.06;
+    bottom: -40px;
+    left: -40px;
+    pointer-events: none;
+    animation: blossom-spin 14s linear infinite reverse;
+}
+
+@keyframes blossom-spin {
+    from {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+@keyframes blossom-float {
+    0%, 100% {
+        transform: translateY(-50%) rotate(20deg);
+    }
+    50% {
+        transform: translateY(-45%) rotate(25deg);
+    }
+}
+
+@keyframes blossom-bloom {
+    0%, 100% {
+        transform: scale(1) rotate(-15deg);
+    }
+    50% {
+        transform: scale(1.15) rotate(0deg);
+    }
+}
+
+.spring-theme .sender-name {
+    color: #388E3C;
+    text-shadow: 2px 2px 4px rgba(129, 199, 132, 0.3);
+}
+
+.message-header {
+    text-align: center;
+    margin-bottom: 35px;
+    border-bottom: 2px solid #E0E0E0;
+    padding-bottom: 20px;
+}
+
+.message-number {
+    display: block;
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 10px;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.sender-name {
+    font-size: 2.2rem;
+    color: #5D4037;
+}
+
+.message-body {
+    margin-bottom: 40px;
+    min-height: 150px;
+}
+
+.message-text {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: #1A1A1A;
+    text-align: center;
+    font-weight: 500;
+}
+
+.message-text.message-short {
+    font-size: 1.65rem;
+    line-height: 1.9;
+}
+
+/* ==========================================
+   NAVIGATION BUTTONS
+   ========================================== */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.nav-left, .nav-right {
+    flex: 1;
+}
+
+.nav-left {
+    text-align: left;
+}
+
+.nav-right {
+    text-align: right;
+}
+
+.btn-nav {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    font-weight: 400;
+}
+
+.btn-prev, .btn-home {
+    background: #757575;
+    color: white;
+}
+
+.btn-prev:hover, .btn-home:hover {
+    background: #616161;
+    transform: translateX(-5px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(97, 97, 97, 0.7);
+}
+
+.btn-next {
+    background: linear-gradient(135deg, #D2691E, #CD853F);
+    color: white;
+}
+
+.btn-next:hover {
+    transform: translateX(5px) scale(1.05);
+    background: linear-gradient(135deg, #C1581D, #BC744E);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(210, 105, 30, 0.7);
+}
+
+/* Theme-specific button colors */
+.summer-theme .btn-prev,
+.summer-theme .btn-home {
+    background: linear-gradient(135deg, #FF9800, #FFB300);
+    color: #1A1A1A;
+    font-weight: 600;
+}
+
+.summer-theme .btn-prev:hover,
+.summer-theme .btn-home:hover {
+    background: linear-gradient(135deg, #F57C00, #FFA000);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 152, 0, 0.7);
+}
+
+.summer-theme .btn-next {
+    background: linear-gradient(135deg, #FFA726, #FFB74D);
+    color: #1A1A1A;
+    font-weight: 600;
+}
+
+.summer-theme .btn-next:hover {
+    background: linear-gradient(135deg, #FB8C00, #FFA726);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 167, 38, 0.7);
+}
+
+.autumn-theme .btn-prev,
+.autumn-theme .btn-home {
+    background: linear-gradient(135deg, #8B4513, #A0522D);
+    color: white;
+}
+
+.autumn-theme .btn-prev:hover,
+.autumn-theme .btn-home:hover {
+    background: linear-gradient(135deg, #6F3609, #8B4513);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(139, 69, 19, 0.7);
+}
+
+.autumn-theme .btn-next {
+    background: linear-gradient(135deg, #D2691E, #CD853F);
+    color: white;
+}
+
+.autumn-theme .btn-next:hover {
+    background: linear-gradient(135deg, #C1581D, #BC744E);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(210, 105, 30, 0.7);
+}
+
+.winter-theme .btn-prev,
+.winter-theme .btn-home {
+    background: linear-gradient(135deg, #4A90E2, #5DADE2);
+    color: white;
+}
+
+.winter-theme .btn-prev:hover,
+.winter-theme .btn-home:hover {
+    background: linear-gradient(135deg, #357ABD, #4A90E2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(74, 144, 226, 0.7);
+}
+
+.winter-theme .btn-next {
+    background: linear-gradient(135deg, #5DADE2, #85C1E9);
+    color: #1A1A1A;
+    font-weight: 600;
+}
+
+.winter-theme .btn-next:hover {
+    background: linear-gradient(135deg, #4A90E2, #5DADE2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(93, 173, 226, 0.7);
+}
+
+.spring-theme .btn-prev,
+.spring-theme .btn-home {
+    background: linear-gradient(135deg, #E91E63, #F06292);
+    color: white;
+}
+
+.spring-theme .btn-prev:hover,
+.spring-theme .btn-home:hover {
+    background: linear-gradient(135deg, #C2185B, #E91E63);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(233, 30, 99, 0.7);
+}
+
+.spring-theme .btn-next {
+    background: linear-gradient(135deg, #F48FB1, #F8BBD0);
+    color: #1A1A1A;
+    font-weight: 600;
+}
+
+.spring-theme .btn-next:hover {
+    background: linear-gradient(135deg, #F06292, #F48FB1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(244, 143, 177, 0.7);
+}
+
+.btn-prev:active, .btn-home:active {
+    transform: translateX(-1px) scale(0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.1s ease;
+}
+
+.btn-next:active {
+    transform: translateX(1px) scale(0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.1s ease;
+}
+
+/* ==========================================
+   ENDING PAGE STYLES
+   ========================================== */
+.ending-container {
+    text-align: center;
+    max-width: 700px;
+}
+
+.ending-content {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 80px 70px;
+    border-radius: 30px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35),
+                inset 0 0 0 3px rgba(210, 105, 30, 0.3),
+                inset 0 0 30px rgba(255, 215, 0, 0.1);
+    backdrop-filter: blur(15px);
+    border: 4px solid transparent;
+    background-image: 
+        linear-gradient(135deg, rgba(255, 248, 220, 0.3), rgba(255, 235, 205, 0.2), rgba(255, 248, 220, 0.3)),
+        linear-gradient(135deg, #FFD700, #D2691E, #CD853F, #FFD700);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    position: relative;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.ending-content:hover {
+    box-shadow: 0 35px 100px rgba(210, 105, 30, 0.7),
+                0 0 100px rgba(255, 215, 0, 0.8),
+                inset 0 0 60px rgba(255, 215, 0, 0.4);
+    transform: translateY(-5px);
+}
+
+.ending-title {
+    font-size: 4.5rem;
+    color: #2C1810;
+    margin-bottom: 20px;
+    line-height: 1.3;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+    font-weight: 700;
+}
+
+.ending-subtitle {
+    font-size: 1.6rem;
+    color: #3E2723;
+    margin-bottom: 30px;
+    font-weight: 400;
+}
+
+.ending-decoration {
+    font-size: 5rem;
+    margin: 30px 0;
+    text-shadow: 
+        0 0 40px rgba(255, 215, 0, 0.9),
+        0 0 80px rgba(255, 215, 0, 0.7),
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(255, 255, 255, 0.8);
+    filter: drop-shadow(0 8px 15px rgba(210, 105, 30, 0.6))
+            drop-shadow(0 0 25px rgba(255, 215, 0, 0.8));
+    transform: scale(1.2);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        transform: scale(1.2);
+        filter: drop-shadow(0 8px 15px rgba(210, 105, 30, 0.6))
+                drop-shadow(0 0 25px rgba(255, 215, 0, 0.8));
+    }
+    50% {
+        transform: scale(1.3);
+        filter: drop-shadow(0 10px 20px rgba(210, 105, 30, 0.8))
+                drop-shadow(0 0 40px rgba(255, 215, 0, 1));
+    }
+}
+
+/* ==========================================
+   ANIMATIONS
+   ========================================== */
+.fade-in {
+    animation: fadeIn 1s ease-in;
+}
+
+.fade-in-slow {
+    animation: fadeIn 1.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Particle falling animations */
+@keyframes fall {
+    to {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
+
+@keyframes fall-winter {
+    to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0.3;
+    }
+}
+
+@keyframes sway {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(50px);
+    }
+}
+
+/* Message decoration animations */
+@keyframes decoration-float-1 {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes decoration-float-2 {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+    }
+    50% {
+        transform: translateY(-15px) translateX(10px);
+    }
+}
+
+@keyframes decoration-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes decoration-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.06;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.1;
+    }
+}
+
+@keyframes decoration-sway {
+    0%, 100% {
+        transform: rotate(-10deg);
+    }
+    50% {
+        transform: rotate(10deg);
+    }
+}
+
+@keyframes decoration-drift {
+    0%, 100% {
+        transform: translateX(0) translateY(0);
+    }
+    50% {
+        transform: translateX(15px) translateY(-10px);
+    }
+}
+
+@keyframes decoration-bloom {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+@media (max-width: 768px) {
+    .birthday-title, .ending-title {
+        font-size: 3rem;
+    }
+    
+    .subtitle, .ending-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .home-content, .ending-content, .message-card {
+        padding: 40px 30px;
+    }
+    
+    .message-text {
+        font-size: 1.1rem;
+    }
+    
+    .navigation-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .nav-left, .nav-right {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .btn-nav {
+        display: block;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .birthday-title, .ending-title {
+        font-size: 2.3rem;
+    }
+    
+    .sender-name {
+        font-size: 1.8rem;
+    }
+    
+    .btn-primary, .btn-secondary {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+}

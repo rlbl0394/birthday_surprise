@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Emoji Catch - Birthday Surprise{% endblock %}
+
+{% block body_class %}emoji-catch-bg{% endblock %}
+
+{% block content %}
+<div class="emoji-catch-container">
+    <h1 class="game-title" data-translate="emoji_catch_game_title">🧺 Emoji Catch</h1>
+    
+    <!-- Name Input Screen -->
+    <div class="name-input-screen" id="name-input-screen">
+        <p class="game-instructions" data-translate="emoji_catch_instructions">Catch as many falling emojis as you can with your basket!</p>
+        <div class="name-input-box">
+            <label for="player-name" data-translate="enter_name">Enter Your Name:</label>
+            <input type="text" id="player-name" maxlength="20" placeholder="Your name">
+            <p class="name-error" id="name-error" style="display: none;" data-translate="name_error">Please enter a valid name</p>
+            <button class="start-game-btn" id="start-game-btn" data-translate="start_game">Start Game</button>
+        </div>
+    </div>
+    
+    <!-- Game Screen -->
+    <div class="game-screen" id="game-screen" style="display: none;">
+        <div class="game-stats">
+            <div class="stat-item">
+                <span data-translate="caught_label">Caught:</span>
+                <span id="score">0</span>
+            </div>
+            <div class="stat-item">
+                <span data-translate="missed_label">Missed:</span>
+                <span id="missed">0</span>
+            </div>
+            <div class="stat-item">
+                <span data-translate="time_label">Time:</span>
+                <span id="timer">60</span>s
+            </div>
+            <button class="pause-btn" id="pause-btn" data-translate="pause_button">⏸️ Pause</button>
+        </div>
+        
+        <div class="countdown-overlay" id="countdown-overlay" style="display: none;">
+            <div class="countdown-number" id="countdown-number">3</div>
+        </div>
+        
+        <div class="catch-area" id="catch-area">
+            <!-- Falling emojis will appear here -->
+            <div class="basket" id="basket">🧺</div>
+        </div>
+    </div>
+    
+    <!-- Game Over Screen -->
+    <div class="game-over-screen" id="game-over-screen" style="display: none;">
+        <h2 data-translate="game_over">Game Over!</h2>
+        <div class="final-stats">
+            <p>
+                <span data-translate="emojis_caught">Emojis Caught:</span>
+                <span id="final-caught">0</span>
+            </p>
+            <p>
+                <span data-translate="emojis_missed">Emojis Missed:</span>
+                <span id="final-missed">0</span>
+            </p>
+        </div>
+        <button class="play-again-btn" id="play-again-btn" data-translate="play_again">Play Again</button>
+        
+        <div class="leaderboard">
+            <h3 data-translate="leaderboard_title">🏆 Leaderboard</h3>
+            <ol id="leaderboard-list">
+                <!-- Leaderboard entries will be added here -->
+            </ol>
+        </div>
+    </div>
+    
+    <div class="game-nav">
+        <button class="back-button" onclick="handleBackButtonClick(event); return false;" data-translate="back_games">← Back to Games</button>
+    </div>
+    
+    <!-- Play Again Modal -->
+    <div class="play-again-modal" id="play-again-modal" style="display: none;">
+        <div class="modal-content">
+            <h3 data-translate="play_again_title">Play Again?</h3>
+            <p data-translate="play_again_question">Would you like to play again?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn same-name-btn" id="same-name-btn" data-translate="same_name">
+                    Continue as <span id="current-player-name"></span>
+                </button>
+                <button class="modal-btn new-name-btn" id="new-name-btn" data-translate="new_name">
+                    Play as Different Person
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Exit Confirmation Modal -->
+    <div class="play-again-modal" id="exit-confirmation-modal" style="display: none;">
+        <div class="modal-content">
+            <h3 data-translate="exit_game_title">Exit Game?</h3>
+            <p data-translate="exit_game_question">Are you sure you want to exit? Your current game will be lost.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn new-name-btn" id="exit-yes-btn" data-translate="exit_yes">
+                    Yes, Exit
+                </button>
+                <button class="modal-btn same-name-btn" id="exit-no-btn" data-translate="exit_no">
+                    No, Continue Playing
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confetti Container -->
+<div class="confetti-container" id="confetti-container"></div>
+<div class="confetti-celebration-message" id="celebration-message"></div>
+
+<!-- Pause Overlay -->
+<div class="pause-overlay" id="pause-overlay">
+    <div class="pause-content">
+        <div class="pause-icon">⏸️</div>
+        <div class="pause-text" data-translate="game_paused">PAUSED</div>
+        <div class="pause-hint" data-translate="pause_hint">Press SPACE or ▶️ Resume to continue</div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/emoji_catch.js') }}"></script>
+{% endblock %}
