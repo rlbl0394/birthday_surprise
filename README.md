@@ -50,7 +50,7 @@ python app.py
 ```
 
 3. **Open in Browser**
-Navigate to: **http://127.0.0.1:5000**
+(local) Navigate to: **http://127.0.0.1:5000**
 
 ### Deployment
 
@@ -142,4 +142,5 @@ Made with ❤️ • Visible in lower-left corner of all pages
 **Live Demo**: [https://birthday-surprise-515r.onrender.com/]
 
 **Repository**: [https://github.com/rlbl0394/birthday_surprise]
+
 
