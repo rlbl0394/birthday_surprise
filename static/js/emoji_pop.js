@@ -648,16 +648,27 @@ function spawnEmojisWithDifficulty() {
     // Clear existing interval
     if (spawnInterval) clearInterval(spawnInterval);
     
-    // Difficulty progression based on time remaining
-    // First 10 seconds (timeLeft 30-21): Easy mode - spawn every 1100ms
-    // Last 20 seconds (timeLeft 20-0): Hard mode - spawn every 700ms
-    const isHardMode = timeLeft <= 20;
-    const spawnRate = isHardMode ? 700 : 1100;
+    // Difficulty progression based on multiplier
+    // x1: 900ms (faster than before)
+    // x2: 800ms
+    // x3: 700ms
+    // x4: 600ms
+    // x5: 550ms
+    // x6: 500ms (fastest)
+    const spawnRates = {
+        1: 900,
+        2: 800,
+        3: 700,
+        4: 600,
+        5: 550,
+        6: 500
+    };
+    const spawnRate = spawnRates[multiplier] || 900;
     
     spawnInterval = setInterval(spawnEmoji, spawnRate);
 }
 
-// Spawn emoji with difficulty based on time remaining
+// Spawn emoji with difficulty based on multiplier
 function spawnEmoji() {
     if (!gameActive) return;
     
@@ -666,18 +677,17 @@ function spawnEmoji() {
     emoji.className = 'pop-emoji';
     emoji.textContent = gameEmojis[Math.floor(Math.random() * gameEmojis.length)];
     
-    // Difficulty progression based on time remaining
-    // First 10 seconds (timeLeft 30-21): Easy mode
-    // Last 20 seconds (timeLeft 20-0): Hard mode
-    const isHardMode = timeLeft <= 20;
-    
-    if (isHardMode) {
-        // Hard mode: slightly smaller emojis
-        emoji.style.fontSize = '2.5rem';
-    } else {
-        // Easy mode: normal size
-        emoji.style.fontSize = '3rem';
-    }
+    // Difficulty progression based on multiplier
+    // Size decreases as multiplier increases
+    const emojiSizes = {
+        1: '3rem',
+        2: '2.9rem',
+        3: '2.8rem',
+        4: '2.7rem',
+        5: '2.6rem',
+        6: '2.5rem'
+    };
+    emoji.style.fontSize = emojiSizes[multiplier] || '3rem';
     
     // Random position
     const maxX = spawnArea.clientWidth - 60;
@@ -690,10 +700,17 @@ function spawnEmoji() {
     
     spawnArea.appendChild(emoji);
     
-    // Auto-remove timing based on difficulty
-    // Hard mode: emojis disappear faster (1.8 seconds)
-    // Easy mode: emojis stay longer (3.5 seconds)
-    const lifetime = isHardMode ? 1800 : 3500;
+    // Auto-remove timing based on multiplier
+    // Lifetime decreases as multiplier increases
+    const lifetimes = {
+        1: 3000,
+        2: 2700,
+        3: 2400,
+        4: 2100,
+        5: 1800,
+        6: 1500
+    };
+    const lifetime = lifetimes[multiplier] || 3000;
     
     // Store creation time and lifetime for pause/resume
     emoji.dataset.createdAt = Date.now();

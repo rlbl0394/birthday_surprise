@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Birthday Surprise Animations
  * Handles seasonal particle effects (leaves, snowflakes, petals, sparkles)
  */
@@ -738,13 +738,13 @@ function getTranslation(key, lang) {
             'ja': '絵文字ポップ'
         },
         'emoji_pop_desc': {
-            'en': 'Pop emojis and build combos for up to 6x multiplier! 30 seconds of fast-paced fun!',
+            'en': 'Click emojis fast to build combos! Difficulty increases with your multiplier - reach 6x for maximum challenge in 30 seconds!',
             'es': '¡Estalla emojis y crea combos para un multiplicador de hasta 6x! ¡30 segundos de diversión!',
-            'zh': '爆破表情符号并建立组合，最高6倍加成！30秒的快节奏乐趣！',
+            'zh': '快速点击表情符号建立连击！难度随乘数增加 - 在30秒内达到6倍以获得最大挑战！',
             'fr': 'Éclatez des emojis et créez des combos jusqu\'au multiplicateur 6x! 30 secondes de fun!',
             'hi': 'इमोजी फोड़ें और 6x गुणक तक कॉम्बो बनाएं! 30 सेकंड का मज़ा!',
-            'tl': 'Pumutok ng emoji at gumawa ng combo para sa 6x multiplier! 30 segundo ng mabilis na laro!',
-            'ja': '絵文字をポップしてコンボを築き、6倍まで増やそう！30秒間のスピードゲーム！'
+            'tl': 'Mag-click ng emoji nang mabilis para gumawa ng combo! Tumataas ang kahirapan sa iyong multiplier - abutin ang 6x para sa maximum na hamon sa 30 segundo!',
+            'ja': '絵文字を素早くクリックしてコンボを作ろう！マルチプライヤーに応じて難易度が上がります - 30秒で6倍に到達して最大チャレンジ！'
         },
         'emoji_catch_title': {
             'en': 'Emoji Catch',
@@ -756,13 +756,13 @@ function getTranslation(key, lang) {
             'ja': '絵文字キャッチ'
         },
         'emoji_catch_desc': {
-            'en': 'Catch good emojis, avoid bad ones! You have 3 lives - don\'t lose them all!',
-            'es': '¡Atrapa emojis buenos, evita los malos! Tienes 3 vidas - ¡no las pierdas todas!',
-            'zh': '捕捉好的表情符号，避免坏的！你有 3 条命 - 不要全部失去！',
-            'fr': 'Attrapez les bons emojis, évitez les mauvais! Vous avez 3 vies - ne les perdez pas toutes!',
-            'hi': 'अच्छे इमोजी पकड़ें， बुरे से बचें! आपके पास 3 जीवन हैं - सभी न खोएं!',
-            'tl': 'Hulihin ang mabuting emoji, iwasan ang masama! Mayroon kang 3 buhay - huwag mawala lahat!',
-            'ja': '良い絵文字をキャッチし、悪いものは避けて！3つのライフがある - 全部失わないで！'
+            'en': 'Catch good emojis and dodge glowing red bad ones! Manage 3 lives with visual warnings - survive to the end!',
+            'es': '¡Atrapa emojis buenos y esquiva los malos rojos brillantes! Administra 3 vidas con advertencias visuales - ¡sobrevive hasta el final!',
+            'zh': '捕捉好的表情符号并躲避发光的红色坏表情符号！通过视觉警告管理3条命 - 生存到最后！',
+            'fr': 'Attrapez les bons emojis et esquivez les mauvais rouges brillants! Gérez 3 vies avec des avertissements visuels - survivez jusqu\'à la fin!',
+            'hi': 'अच्छे इमोजी पकड़ें और चमकते लाल बुरे से बचें! दृश्य चेतावनियों के साथ 3 जीवन प्रबंधित करें - अंत तक जीवित रहें!',
+            'tl': 'Hulihin ang mabuting emoji at iwasan ang nagniningning na pulang masama! Pamahalaan ang 3 buhay gamit ang visual na babala - makaligtas hanggang sa dulo!',
+            'ja': '良い絵文字をキャッチし、光る赤い悪い絵文字をかわそう！視覚的警告で3つのライフを管理 - 最後まで生き残ろう！'
         },
         'play_button': {
             'en': 'Play',
@@ -819,13 +819,13 @@ function getTranslation(key, lang) {
             'ja': '💥 絵文字ポップチャレンジ'
         },
         'emoji_pop_instructions': {
-            'en': 'Pop emojis and build combos for up to 6x multiplier! 30 seconds of fast-paced fun!',
-            'es': '¡Estalla emojis y construye combos para multiplicador hasta x6! ¡30 segundos de diversión rápida!',
-            'zh': '爆破表情符号并建立连击获得最高6倍乘数！30秒快节奏乐趣！',
-            'fr': 'Éclatez les emojis et créez des combos pour un multiplicateur jusqu\'à x6! 30 secondes de plaisir rapide!',
-            'hi': 'इमोजी फोड़ें और 6x गुणक तक कॉम्बो बनाएं! 30 सेकंड का तेज़ मज़ा!',
-            'tl': 'Pumutok ng emoji at gumawa ng combo para sa hanggang 6x multiplier! 30 segundo ng mabilis na kasiyahan!',
-            'ja': '絵文字をポップしてコンボを作り、最大6倍のマルチプライヤーを獲得！30秒間の速いペースの楽しみ！'
+            'en': 'Click emojis before they vanish! Build combo streaks (every 5 pops = +1x multiplier). Game gets progressively harder with faster spawns and shorter lifetimes as your multiplier increases. 30 seconds to reach 6x!',
+            'es': '¡Haz clic en los emojis antes de que desaparezcan! Construye rachas de combos (cada 5 estallidos = multiplicador +1x). El juego se vuelve progresivamente más difícil con apariciones más rápidas y tiempos de vida más cortos a medida que aumenta tu multiplicador. ¡30 segundos para alcanzar 6x!',
+            'zh': '在它们消失之前点击表情符号！建立连击（每5次爆破 = +1倍乘数）。随着乘数增加，游戏逐渐变难，生成更快，寿命更短。30秒达到6倍！',
+            'fr': 'Cliquez sur les emojis avant qu\'ils ne disparaissent! Créez des séries de combos (chaque 5 éclats = multiplicateur +1x). Le jeu devient progressivement plus difficile avec des apparitions plus rapides et des durées de vie plus courtes à mesure que votre multiplicateur augmente. 30 secondes pour atteindre 6x!',
+            'hi': 'इमोजी गायब होने से पहले क्लिक करें! कॉम्बो स्ट्रीक बनाएं (हर 5 पॉप = +1x गुणक)। आपके गुणक के बढ़ने के साथ खेल क्रमिक रूप से कठिन हो जाता है तेज़ स्पॉन और छोटे जीवनकाल के साथ। 6x तक पहुंचने के लिए 30 सेकंड!',
+            'tl': 'I-click ang mga emoji bago sila mawala! Gumawa ng combo streaks (bawat 5 pop = +1x multiplier). Ang laro ay nagiging progresibong mas mahirap na may mas mabilis na spawn at mas maikling lifetime habang tumataas ang iyong multiplier. 30 segundo upang maabot ang 6x!',
+            'ja': '絵文字が消える前にクリック！コンボストリークを作ろう（5回ポップごとに+1倍マルチプライヤー）。マルチプライヤーが増えるにつれて、スポーンが速く、寿命が短くなり、ゲームが段階的に難しくなります。6倍に到達するまで30秒！'
         },
         'emoji_catch_game_title': {
             'en': '🧺 Emoji Catch',
@@ -837,13 +837,13 @@ function getTranslation(key, lang) {
             'ja': '🧺 絵文字キャッチ'
         },
         'emoji_catch_instructions': {
-            'en': 'Catch good emojis, avoid bad ones! You have 3 lives - don\'t lose them all!',
-            'es': '¡Atrapa emojis buenos, evita los malos! Tienes 3 vidas - ¡no las pierdas todas!',
-            'zh': '接住好的表情符号，避开坏的！你有3条命 - 不要全部失去！',
-            'fr': 'Attrapez les bons emojis, évitez les mauvais! Vous avez 3 vies - ne les perdez pas toutes!',
-            'hi': 'अच्छे इमोजी पकड़ें, बुरे से बचें! आपके पास 3 जीवन हैं - सभी मत खोइए!',
-            'tl': 'Hulihin ang mabubuting emoji, iwasan ang masasama! Mayroon kang 3 buhay - huwag mawala lahat!',
-            'ja': '良い絵文字をキャッチし、悪いものを避けよう！3つのライフがあります - 全部失わないように！'
+            'en': 'Move your basket anywhere on screen to catch falling good emojis! Avoid the 6 types of glowing red bad emojis (💣☠️👻🔥⚡💀). Start with 3 hearts - lose one per bad catch. Visual warnings show when danger is near!',
+            'es': '¡Mueve tu cesta por toda la pantalla para atrapar emojis buenos que caen! Evita los 6 tipos de emojis malos rojos brillantes (💣☠️👻🔥⚡💀). Comienza con 3 corazones - pierdes uno por cada captura mala. ¡Las advertencias visuales muestran cuando el peligro está cerca!',
+            'zh': '在屏幕上任意移动你的篮子来捕捉掉落的好表情符号！避开6种发光的红色坏表情符号（💣☠️👻🔥⚡💀）。从3颗心开始 - 每次抓到坏表情符号失去一颗。视觉警告显示危险接近！',
+            'fr': 'Déplacez votre panier n\'importe où sur l\'écran pour attraper les bons emojis qui tombent! Évitez les 6 types de mauvais emojis rouges brillants (💣☠️👻🔥⚡💀). Commencez avec 3 cœurs - perdez-en un par mauvaise capture. Les avertissements visuels montrent quand le danger est proche!',
+            'hi': 'गिरते अच्छे इमोजी को पकड़ने के लिए अपनी टोकरी को स्क्रीन पर कहीं भी ले जाएं! 6 प्रकार के चमकते लाल बुरे इमोजी से बचें (💣☠️👻🔥⚡💀)। 3 दिलों के साथ शुरू करें - प्रति बुरे कैच एक खोएं। दृश्य चेतावनियाँ दिखाती हैं जब खतरा पास है!',
+            'tl': 'Ilipat ang iyong basket kahit saan sa screen upang hulihin ang nahuhulog na mabubuting emoji! Iwasan ang 6 uri ng nagniningning na pulang masamang emoji (💣☠️👻🔥⚡💀). Magsimula sa 3 puso - mawawalan ng isa sa bawat masamang huli. Nagpapakita ang visual na babala kapag malapit ang panganib!',
+            'ja': '画面のどこでもバスケットを動かして、落ちてくる良い絵文字をキャッチしよう！6種類の光る赤い悪い絵文字を避けよう（💣☠️👻🔥⚡💀）。3つのハートでスタート - 悪いキャッチごとに1つ失います。危険が近いとき視覚的警告が表示されます！'
         },
         'enter_name': {
             'en': 'Enter Your Name:',
@@ -1597,3 +1597,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+

@@ -439,8 +439,8 @@ function startGame() {
     basketX = catchArea.clientWidth / 2 - 40;
     basket.style.left = basketX + 'px';
     
-    // Basket movement with mouse
-    catchArea.addEventListener('mousemove', moveBasket);
+    // Basket movement with mouse - track entire page
+    document.addEventListener('mousemove', moveBasket);
     
     // Show countdown before starting
     showCountdown(() => {
@@ -458,6 +458,8 @@ function moveBasket(e) {
     
     const catchArea = document.getElementById('catch-area');
     const rect = catchArea.getBoundingClientRect();
+    
+    // Calculate position relative to catch area
     basketX = e.clientX - rect.left - 40; // Center basket on cursor
     
     // Keep basket within bounds
@@ -533,6 +535,8 @@ function spawnFallingEmoji() {
                     // Bad emoji caught - lose a life
                     lives--;
                     updateLivesDisplay();
+                    showHeartbreakPopup();
+                    showLifeLostEffect();
                     emoji.classList.add('bad-caught');
                     playErrorSound();
                     clearInterval(fallInterval);
@@ -725,6 +729,8 @@ function togglePause() {
                                 // Bad emoji caught - lose a life
                                 lives--;
                                 updateLivesDisplay();
+                                showHeartbreakPopup();
+                                showLifeLostEffect();
                                 emoji.classList.add('bad-caught');
                                 playErrorSound();
                                 clearInterval(fallInterval);
@@ -1344,6 +1350,56 @@ function updateLivesDisplay() {
         }
     }
     livesContainer.innerHTML = heartsHTML;
+    
+    // Update catch area visual state based on remaining lives
+    const catchArea = document.getElementById('catch-area');
+    if (catchArea) {
+        if (lives === 1) {
+            catchArea.classList.add('low-life');
+        } else {
+            catchArea.classList.remove('low-life');
+        }
+    }
+}
+
+// Show heartbreak popup when life is lost
+function showHeartbreakPopup() {
+    const popup = document.getElementById('heartbreak-popup');
+    if (!popup) return;
+    
+    // Remove existing animation
+    popup.classList.remove('show-heartbreak');
+    
+    // Trigger reflow
+    void popup.offsetWidth;
+    
+    // Add animation class
+    popup.classList.add('show-heartbreak');
+    
+    // Remove class after animation
+    setTimeout(() => {
+        popup.classList.remove('show-heartbreak');
+    }, 1000);
+}
+
+// Show life lost effect (red pulse on catch area)
+function showLifeLostEffect() {
+    const catchArea = document.getElementById('catch-area');
+    if (!catchArea) return;
+    
+    // Remove existing animation
+    catchArea.classList.remove('life-lost');
+    
+    // Trigger reflow
+    void catchArea.offsetWidth;
+    
+    // Add animation class
+    catchArea.classList.add('life-lost');
+    
+    // Remove class after animation
+    setTimeout(() => {
+        catchArea.classList.remove('life-lost');
+    }, 600);
 }
 
 function playErrorSound() {

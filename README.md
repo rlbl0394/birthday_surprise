@@ -21,28 +21,40 @@ An elegant, multilingual interactive birthday experience featuring beautiful ani
 ### 🎮 Interactive Mini-Games
 - **Fortune Cookie Game**: Click to crack open fortune cookies and reveal personalized birthday messages
 - **Emoji Pop**: Fast-paced clicking game with combo multiplier system
-  - 30-second timer with progressive difficulty
-  - Build combo streaks for up to 6x score multiplier
+  - 30-second timer with progressive difficulty that scales with your multiplier
+  - Build combo streaks for up to 6x score multiplier (every 5 pops = +1x)
+  - Dynamic difficulty: Game gets harder as multiplier increases
+    - x1: 900ms spawn, 3.0s lifetime, 3.0rem size
+    - x6: 500ms spawn, 1.5s lifetime, 2.5rem size (fastest)
   - Rainbow glow effects and visual multiplier popups
   - Combo meter showing streak progress
-  - Easy mode (first 10s) → Hard mode (last 20s with faster spawning)
   - High score tracking with local leaderboard
   - Confetti celebration for new records
 - **Emoji Catch**: Strategic catching game with life system
   - Catch good emojis while avoiding 6 types of bad emojis (💣☠️👻🔥⚡💀)
   - 3-heart life system - lose a life for each bad emoji caught
   - Bad emojis feature red pulsing glow animation
+  - Visual feedback when losing lives: red border pulse and faint heartbreak emoji popup
+  - Low-life warning: Prominent red pulsating glow when only 1 life remains
+  - Full-page mouse tracking for basket movement
+  - Purple/magenta gradient background for better emoji visibility
   - Game over when all lives are lost
+  - Fixed 500px gameplay box with stable UI elements
   - Dynamic difficulty progression (Easy → Hard mode)
   - Score tracking with local leaderboard
 
 ### 🎨 Visual Polish
 - **Animated Gradient Backgrounds**: Subtly moving, dancing colors on all pages
+- **Game-Specific Backgrounds**: Purple/magenta gradient for Emoji Catch, contrasting with emoji colors
 - **Smooth Animations**: Professional transitions and particle effects
+- **Life Loss Effects**: Red border pulse, heartbreak emoji popup, and low-life warning glow
+- **Multiplier Feedback**: Faint popup display and rainbow glow pulsation on combo thresholds
+- **Fixed UI Elements**: Stable 500px gameplay boxes with consistent stat displays (140px min-width)
 - **Centered Layouts**: Optimized content positioning with minimal scrolling
 - **Gift Modals**: Full-screen dark overlays with centered content and celebration effects
 - **Pause System**: Spacebar or button to pause games with visual overlay
 - **Responsive Design**: Optimized for all screen sizes
+- **Color-Coded Buttons**: Orange Start/Play Again, Blue Pause, Orange Restart for visual clarity
 - **Background Music**: Toggle-able ambient music throughout
 
 ### 🏆 Game Features
@@ -137,20 +149,28 @@ birthday_surprise/
 ### Emoji Pop Game
 - Click emojis before they disappear to build combo streaks
 - Every 5 pops increases multiplier (x2, x3, x4, x5, x6)
+- **Multiplier-Based Difficulty**: Game progressively gets harder as you build combos
+  - Higher multipliers = faster spawning, smaller emojis, shorter lifetimes
+  - x1 (start): Emojis spawn every 900ms, last 3.0 seconds, size 3.0rem
+  - x6 (max): Emojis spawn every 500ms, last 1.5 seconds, size 2.5rem
 - Visual feedback: rainbow glow intensity scales with streak, faint multiplier popup appears when crossing thresholds
 - Combo meter shows progress toward next multiplier level
-- First 10 seconds: Easy (1100ms spawn rate, 3.5s lifetime)
-- Last 20 seconds: Hard (700ms spawn rate, 1.8s lifetime)
-- Missing an emoji resets your combo streak
+- Missing an emoji resets your combo streak to 0
 - Pause anytime with spacebar or pause button
 - Beat high scores for confetti celebration
 
 ### Emoji Catch Game
-- Move basket with mouse to catch falling good emojis
-- Avoid catching bad emojis (30% spawn chance) - they have red pulsing glow
-- Start with 3 lives (hearts) - lose one for each bad emoji caught
+- Move basket with mouse anywhere on the page (not limited to game area)
+- Catch falling good emojis while avoiding bad emojis
+- Bad emojis (30% spawn chance) have red pulsing glow for easy identification
+- Start with 3 lives (hearts ❤️) - lose one for each bad emoji caught
+- **Visual Life Feedback**:
+  - Red border pulse animation when losing a life
+  - Faint heartbreak emoji (💔) popup appears briefly
+  - Prominent continuous red glow warning when only 1 life remains
 - Game ends when all lives are lost
-- Focus on maximizing caught emojis while managing your lives
+- Purple/magenta gradient background enhances emoji visibility
+- Focus on maximizing caught emojis while managing your lives strategically
 - Progressive difficulty: Easy mode (1000ms spawn) → Hard mode (600ms spawn)
 - Compete for top leaderboard position
 
@@ -176,13 +196,15 @@ Edit `static/js/animations.js` and add translations to the `translations` object
 Adjust spawn rates, speeds, combo thresholds, and life counts in:
 - `static/js/emoji_pop.js`:
   - Combo multiplier cap (line ~755): `Math.min(1 + Math.floor(streak / 5), 6)`
-  - Spawn rates (lines ~647-649): Easy 1100ms, Hard 700ms
-  - Emoji lifetimes (lines ~670-678): Easy 3.5s, Hard 1.8s
+  - Multiplier-based spawn rates (lines ~649-660): Object with rates for each multiplier level
+  - Multiplier-based lifetimes (lines ~705-716): Object with lifetimes for each multiplier
+  - Emoji sizes by multiplier (lines ~685-696): Object with sizes for each level
 - `static/js/emoji_catch.js`:
   - Starting lives (line ~15): `let lives = 3`
   - Bad emoji spawn chance (line ~475): `Math.random() < 0.3`
   - Bad emoji types (line ~14): Array of 6 bad emojis
   - Spawn rates (lines ~588-596): Easy 1000ms, Hard 600ms
+  - Low-life glow intensity (CSS lines ~1150-1175): Border colors and box-shadow values
 
 ### Changing Gift Images
 Replace images in `static/images/`:
