@@ -390,7 +390,7 @@ function playFortuneBackgroundMusic() {
     
     // Create new game music
     window.gameBackgroundMusic = new Audio('https://www.bensound.com/bensound-music/bensound-ukulele.mp3');
-    window.gameBackgroundMusic.volume = 0.15;
+    window.gameBackgroundMusic.volume = 0.08;
     window.gameBackgroundMusic.loop = true;
     
     // Set as current background music for toggle button
@@ -443,6 +443,9 @@ function openCookie(cookieElement) {
         // Play success sound and celebration
         playSuccessSound();
         createCelebrationAnimation();
+        
+        // Mark that cookie has been opened
+        window.cookieHasBeenOpened = true;
     }, 500);
 }
 
@@ -499,7 +502,7 @@ function updateFortuneDisplay() {
 function playClickSound() {
     if (!window.isMusicMuted) {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
-        audio.volume = 0.2;
+        audio.volume = 0.1;
         audio.play().catch(e => console.log('Audio play failed:', e));
     }
 }
@@ -508,7 +511,27 @@ function playSuccessSound() {
     if (!window.isMusicMuted) {
         // Play cheerful success sound
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
-        audio.volume = 0.4;
+        audio.volume = 0.2;
         audio.play().catch(e => console.log('Audio play failed:', e));
     }
 }
+
+// Track if cookie has been opened
+window.cookieHasBeenOpened = false;
+window.isNavigatingAway = false;
+
+// Prevent accidental page reload during active fortune cookie session
+window.addEventListener('beforeunload', function(e) {
+    // Don't show warning if user clicked "Back to Games" button
+    if (window.isNavigatingAway) {
+        return;
+    }
+    
+    // Show warning if cookie has been opened and fortune is being displayed
+    const fortuneDisplay = document.getElementById('fortune-display');
+    if (window.cookieHasBeenOpened && fortuneDisplay && fortuneDisplay.style.display === 'flex') {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+    }
+});

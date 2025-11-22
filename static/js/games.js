@@ -34,7 +34,7 @@ function playGamesBackgroundMusic() {
     
     // Create new game music
     window.gameBackgroundMusic = new Audio('https://www.bensound.com/bensound-music/bensound-happyrock.mp3');
-    window.gameBackgroundMusic.volume = 0.15;
+    window.gameBackgroundMusic.volume = 0.08;
     window.gameBackgroundMusic.loop = true;
     
     // Set as current background music for toggle button
@@ -223,7 +223,7 @@ function playGameSound(soundFile, volume = 0.3) {
 function playHoverSound() {
     if (!window.isMusicMuted) {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2570/2570-preview.mp3');
-        audio.volume = 0.15;
+        audio.volume = 0.08;
         audio.play().catch(e => console.log('Hover sound failed:', e));
     }
 }
@@ -231,7 +231,7 @@ function playHoverSound() {
 function playClickSound() {
     if (!window.isMusicMuted) {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
-        audio.volume = 0.25;
+        audio.volume = 0.12;
         audio.play().catch(e => console.log('Click sound failed:', e));
     }
 }

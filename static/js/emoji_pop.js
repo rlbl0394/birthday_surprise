@@ -9,6 +9,10 @@ let timerInterval;
 let countdownInterval;
 let isCountingDown = false;
 let isPauseTransitioning = false;
+let streak = 0;
+let multiplier = 1;
+let lastPopTime = 0;
+const streakTimeout = 2000; // 2 seconds to maintain streak
 
 // Emoji list for spawning
 const gameEmojis = ['🎈', '🎉', '🎊', '🎁', '🌟', '⭐', '💫', '✨', '🎀', '🎂', '🍰', '🧁', '🎪', '🎨', '🎭', '🎯'];
@@ -204,6 +208,42 @@ const emojiPopTranslations = {
         'tl': 'Hindi, Magpatuloy sa Paglalaro',
         'ja': 'いいえ、続ける'
     },
+    'restart_game_title': {
+        'en': 'Restart Game?',
+        'es': '¿Reiniciar Juego?',
+        'zh': '重新开始游戏？',
+        'fr': 'Redémarrer le Jeu?',
+        'hi': 'खेल पुनः प्रारंभ करें?',
+        'tl': 'I-restart ang Laro?',
+        'ja': 'ゲームを再開？'
+    },
+    'restart_game_question': {
+        'en': 'Are you sure you want to restart? Your current game will be lost.',
+        'es': '¿Estás seguro de que quieres reiniciar? Tu juego actual se perderá.',
+        'zh': '确定要重新开始吗？当前游戏将会丢失。',
+        'fr': 'Êtes-vous sûr de vouloir redémarrer? Votre partie actuelle sera perdue.',
+        'hi': 'क्या आप वाकई पुनः प्रारंभ करना चाहते हैं? आपका वर्तमान खेल खो जाएगा।',
+        'tl': 'Sigurado ka bang gusto mong i-restart? Mawawala ang iyong kasalukuyang laro.',
+        'ja': '本当に再開しますか？現在のゲームは失われます。'
+    },
+    'restart_yes': {
+        'en': 'Yes, Restart',
+        'es': 'Sí, Reiniciar',
+        'zh': '是的，重新开始',
+        'fr': 'Oui, Redémarrer',
+        'hi': 'हां, पुनः प्रारंभ करें',
+        'tl': 'Oo, I-restart',
+        'ja': 'はい、再開'
+    },
+    'restart_no': {
+        'en': 'No, Continue Playing',
+        'es': 'No, Seguir Jugando',
+        'zh': '不，继续游戏',
+        'fr': 'Non, Continuer à Jouer',
+        'hi': 'नहीं, खेलना जारी रखें',
+        'tl': 'Hindi, Magpatuloy sa Paglalaro',
+        'ja': 'いいえ、続ける'
+    },
     'game_paused': {
         'en': 'PAUSED',
         'es': 'PAUSADO',
@@ -221,6 +261,42 @@ const emojiPopTranslations = {
         'hi': 'जारी रखने के लिए SPACE या ▶️ जारी रखें दबाएं',
         'tl': 'Pindutin ang SPACE o ▶️ Ituloy upang magpatuloy',
         'ja': 'スペースキーまたは ▶️ 再開を押して続行'
+    },
+    'reload_game_title': {
+        'en': 'Leave Game?',
+        'es': '¿Salir del Juego?',
+        'zh': '离开游戏？',
+        'fr': 'Quitter le Jeu?',
+        'hi': 'खेल छोड़ें?',
+        'tl': 'Umalis sa Laro?',
+        'ja': 'ゲームを離れる？'
+    },
+    'reload_game_question': {
+        'en': 'Are you sure you want to leave? Your current game will be lost.',
+        'es': '¿ Estás seguro de que quieres salir? Tu juego actual se perderá.',
+        'zh': '确定要离开吗？当前游戏将会丢失。',
+        'fr': 'Êtes-vous sûr de vouloir partir? Votre partie actuelle sera perdue.',
+        'hi': 'क्या आप वाकई छोड़ना चाहते हैं? आपका वर्तमान खेल खो जाएगा।',
+        'tl': 'Sigurado ka bang gusto mong umalis? Mawawala ang iyong kasalukuyang laro.',
+        'ja': '本当に離れますか？現在のゲームは失われます。'
+    },
+    'reload_yes': {
+        'en': 'Yes, Leave',
+        'es': 'Sí, Salir',
+        'zh': '是的，离开',
+        'fr': 'Oui, Quitter',
+        'hi': 'हां, छोड़ें',
+        'tl': 'Oo, Umalis',
+        'ja': 'はい、離れる'
+    },
+    'reload_no': {
+        'en': 'No, Stay',
+        'es': 'No, Quedarme',
+        'zh': '不，留下',
+        'fr': 'Non, Rester',
+        'hi': 'नहीं, रहें',
+        'tl': 'Hindi, Manatili',
+        'ja': 'いいえ、留まる'
     }
 };
 
@@ -253,9 +329,27 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('same-name-btn').addEventListener('click', playAgainSameName);
     document.getElementById('new-name-btn').addEventListener('click', playAgainNewName);
     
+    // Prevent accidental page reload/close during active game
+    window.addEventListener('beforeunload', function(e) {
+        // Don't show warning if user already confirmed exit through our modal
+        if (window.isNavigatingAway) {
+            return;
+        }
+        // Only show warning if game is active (not on start screen or game over screen)
+        if (gameActive || (playerName && document.getElementById('game-screen').style.display === 'block' && document.getElementById('game-over-screen').style.display === 'none')) {
+            e.preventDefault();
+            e.returnValue = ''; // Chrome requires returnValue to be set
+            return ''; // For older browsers
+        }
+    });
+    
     // Exit confirmation modal buttons
     document.getElementById('exit-yes-btn').addEventListener('click', confirmExit);
     document.getElementById('exit-no-btn').addEventListener('click', cancelExit);
+    
+    // Restart confirmation modal buttons
+    document.getElementById('restart-yes-btn').addEventListener('click', confirmRestart);
+    document.getElementById('restart-no-btn').addEventListener('click', cancelRestart);
     
     // Add Enter key support for name input
     document.getElementById('player-name').addEventListener('keypress', function(e) {
@@ -287,7 +381,7 @@ function playEmojiPopBackgroundMusic() {
     
     // Create new game music
     window.gameBackgroundMusic = new Audio('https://www.bensound.com/bensound-music/bensound-funkyelement.mp3');
-    window.gameBackgroundMusic.volume = 0.15;
+    window.gameBackgroundMusic.volume = 0.08;
     window.gameBackgroundMusic.loop = true;
     
     // Set as current background music for toggle button
@@ -352,17 +446,43 @@ function startGame() {
     timeLeft = 30;
     gameActive = false;
     gamePaused = false;
+    streak = 0;
+    multiplier = 1;
+    lastPopTime = 0;
     
     document.getElementById('score').textContent = score;
     document.getElementById('timer').textContent = timeLeft;
+    
+    // Reset combo meter and rainbow glow
+    const spawnArea = document.getElementById('emoji-spawn-area');
+    if (spawnArea) {
+        spawnArea.style.boxShadow = '';
+        spawnArea.classList.remove('rainbow-glow');
+        spawnArea.classList.remove('glow-pulse');
+    }
+    
+    const multiplierDisplay = document.getElementById('multiplier-display');
+    if (multiplierDisplay) multiplierDisplay.style.visibility = 'hidden';
+    
+    updateComboMeter();
+    updateRainbowGlow();
     
     // Set pause button text with translation
     const pauseText = emojiPopTranslations['pause_button'][window.currentLanguage] || '⏸️ Pause';
     document.getElementById('pause-btn').textContent = pauseText;
     document.getElementById('pause-btn').classList.remove('paused');
     
-    // Clear spawn area
-    document.getElementById('emoji-spawn-area').innerHTML = '';
+    // Clear spawn area (but preserve multiplier popup)
+    const spawnAreaEl = document.getElementById('emoji-spawn-area');
+    const emojisToRemove = spawnAreaEl.querySelectorAll('.pop-emoji');
+    emojisToRemove.forEach(emoji => emoji.remove());
+    
+    // Reset popup state
+    const popup = document.getElementById('multiplier-popup');
+    if (popup) {
+        popup.classList.remove('show-popup');
+        popup.style.opacity = '0';
+    }
     
     // Show countdown before starting
     showCountdown(() => {
@@ -461,6 +581,7 @@ function togglePause() {
             isCountingDown = false;
             isPauseTransitioning = false;
             gamePaused = false;
+            gameActive = true; // Ensure game is active when resuming
             
             // Resume all emoji animations AFTER countdown
             const resumeTime = Date.now();
@@ -528,10 +649,10 @@ function spawnEmojisWithDifficulty() {
     if (spawnInterval) clearInterval(spawnInterval);
     
     // Difficulty progression based on time remaining
-    // First 10 seconds (timeLeft 30-21): Easy mode - spawn every 900ms
-    // Last 20 seconds (timeLeft 20-0): Hard mode - spawn every 500ms (much faster)
+    // First 10 seconds (timeLeft 30-21): Easy mode - spawn every 1100ms
+    // Last 20 seconds (timeLeft 20-0): Hard mode - spawn every 700ms
     const isHardMode = timeLeft <= 20;
-    const spawnRate = isHardMode ? 500 : 900;
+    const spawnRate = isHardMode ? 700 : 1100;
     
     spawnInterval = setInterval(spawnEmoji, spawnRate);
 }
@@ -551,8 +672,8 @@ function spawnEmoji() {
     const isHardMode = timeLeft <= 20;
     
     if (isHardMode) {
-        // Hard mode: smaller emojis
-        emoji.style.fontSize = '2rem';
+        // Hard mode: slightly smaller emojis
+        emoji.style.fontSize = '2.5rem';
     } else {
         // Easy mode: normal size
         emoji.style.fontSize = '3rem';
@@ -570,9 +691,9 @@ function spawnEmoji() {
     spawnArea.appendChild(emoji);
     
     // Auto-remove timing based on difficulty
-    // Hard mode: emojis disappear faster (1.2 seconds)
-    // Easy mode: emojis stay longer (3 seconds)
-    const lifetime = isHardMode ? 1200 : 3000;
+    // Hard mode: emojis disappear faster (1.8 seconds)
+    // Easy mode: emojis stay longer (3.5 seconds)
+    const lifetime = isHardMode ? 1800 : 3500;
     
     // Store creation time and lifetime for pause/resume
     emoji.dataset.createdAt = Date.now();
@@ -603,6 +724,10 @@ function spawnEmoji() {
         if (elapsed >= lifetime) {
             clearInterval(removalChecker);
             if (emoji.parentElement) {
+                // Emoji was missed - reset streak
+                streak = 0;
+                multiplier = 1;
+                updateRainbowGlow();
                 emoji.remove();
             }
         }
@@ -616,14 +741,145 @@ function spawnEmoji() {
 function popEmoji(emoji) {
     if (!gameActive || gamePaused) return;
     
-    score++;
+    const currentTime = Date.now();
+    const previousStreak = streak;
+    
+    // Check if streak continues (within 2 seconds of last pop)
+    if (currentTime - lastPopTime <= streakTimeout) {
+        streak++;
+    } else {
+        streak = 1;
+    }
+    lastPopTime = currentTime;
+    
+    // Calculate multiplier based on streak (every 5 pops), capped at 6x
+    const previousMultiplier = multiplier;
+    multiplier = Math.min(1 + Math.floor(streak / 5), 6);
+    
+    // Show popup when crossing a multiplier threshold (x2, x3, x4, x5, x6)
+    if (multiplier > previousMultiplier && multiplier >= 2) {
+        showMultiplierPopup(multiplier);
+    }
+    
+    // Add score with multiplier
+    score += multiplier;
     document.getElementById('score').textContent = score;
+    
+    // Update rainbow glow based on streak
+    updateRainbowGlow();
+    
+    // Update combo meter
+    updateComboMeter();
     
     // Animate pop
     emoji.classList.add('popping');
     playPopSound();
     
     setTimeout(() => emoji.remove(), 300);
+}
+
+// Update rainbow glow effect based on streak
+function updateRainbowGlow() {
+    const spawnArea = document.getElementById('emoji-spawn-area');
+    const multiplierDisplay = document.getElementById('multiplier-display');
+    const multiplierSpan = document.getElementById('multiplier');
+    
+    if (!spawnArea) return;
+    
+    if (streak < 5) {
+        // No glow for streaks less than 5
+        spawnArea.style.boxShadow = '';
+        spawnArea.classList.remove('rainbow-glow');
+        if (multiplierDisplay) multiplierDisplay.style.visibility = 'hidden';
+    } else {
+        // Calculate intensity based on streak - progressively stronger glow
+        const comboLevel = Math.floor(streak / 5);
+        const intensity = Math.min(15 + (comboLevel * 10), 65); // 15px to 65px glow (stronger progression)
+        
+        // Add rainbow glow class for animation
+        spawnArea.classList.add('rainbow-glow');
+        spawnArea.style.setProperty('--glow-intensity', `${intensity}px`);
+        
+        // Show and update multiplier display
+        if (multiplierDisplay) {
+            multiplierDisplay.style.visibility = 'visible';
+            if (multiplierSpan) multiplierSpan.textContent = multiplier;
+        }
+    }
+}
+
+// Show multiplier popup when threshold is crossed
+function showMultiplierPopup(multiplierValue) {
+    const popup = document.getElementById('multiplier-popup');
+    if (!popup) return;
+    
+    // Update text
+    popup.textContent = `x${multiplierValue}`;
+    
+    // Remove any existing animation
+    popup.classList.remove('show-popup');
+    
+    // Trigger reflow to restart animation
+    void popup.offsetWidth;
+    
+    // Add animation class
+    popup.classList.add('show-popup');
+    
+    // Trigger pulsation on spawn area
+    const spawnArea = document.getElementById('emoji-spawn-area');
+    if (spawnArea) {
+        spawnArea.classList.remove('glow-pulse');
+        void spawnArea.offsetWidth;
+        spawnArea.classList.add('glow-pulse');
+        
+        // Remove pulse class after animation
+        setTimeout(() => {
+            spawnArea.classList.remove('glow-pulse');
+        }, 600);
+    }
+    
+    // Remove show class after animation completes
+    setTimeout(() => {
+        popup.classList.remove('show-popup');
+    }, 1500);
+}
+
+// Update combo meter display
+function updateComboMeter() {
+    const meterFill = document.getElementById('combo-meter-fill');
+    const comboLevelText = document.getElementById('combo-level-text');
+    const comboMultiplierText = document.getElementById('combo-multiplier-text');
+    
+    if (!meterFill) return;
+    
+    // Calculate percentage (0-100%) based on streak, capped at 30 (6x combo)
+    const maxStreak = 30; // 6x multiplier at 30 streak
+    const percentage = Math.min((streak / maxStreak) * 100, 100);
+    
+    // Update meter fill
+    meterFill.style.width = `${percentage}%`;
+    
+    // Update text
+    if (comboMultiplierText) {
+        comboMultiplierText.textContent = `x${multiplier}`;
+    }
+    
+    // Add rainbow effect when reaching higher combos
+    if (streak >= 5) {
+        meterFill.classList.add('rainbow-fill');
+        if (comboLevelText) comboLevelText.textContent = 'COMBO';
+    } else {
+        meterFill.classList.remove('rainbow-fill');
+        if (comboLevelText) comboLevelText.textContent = 'COMBO';
+    }
+    
+    // Pulse effect on combo level up
+    const currentComboLevel = Math.floor(streak / 5);
+    const previousComboLevel = Math.floor((streak - 1) / 5);
+    if (currentComboLevel > previousComboLevel && streak >= 5) {
+        meterFill.classList.add('meter-pulse');
+        setTimeout(() => meterFill.classList.remove('meter-pulse'), 500);
+    }
 }
 
 // Update timer
@@ -649,8 +905,11 @@ function endGame() {
     clearInterval(timerInterval);
     clearInterval(countdownInterval);
     
-    // Clear remaining emojis
-    document.getElementById('emoji-spawn-area').innerHTML = '';
+    // Clear remaining emojis and remove rainbow glow
+    const spawnArea = document.getElementById('emoji-spawn-area');
+    spawnArea.innerHTML = '';
+    spawnArea.classList.remove('rainbow-glow');
+    spawnArea.style.boxShadow = '';
     
     // Save score to leaderboard
     saveScore(playerName, score);
@@ -813,6 +1072,8 @@ window.updateExitModalTranslation = function() {
 // Confirm exit - navigate to games page
 function confirmExit() {
     playClickSound();
+    // Set flag to bypass beforeunload event
+    window.isNavigatingAway = true;
     // Reset game state
     gameActive = false;
     gamePaused = false;
@@ -884,6 +1145,139 @@ function cancelExit() {
         gamePaused = false;
         isCountingDown = false;
         // Resume spawning with appropriate difficulty and timer from current state
+        spawnEmojisWithDifficulty();
+        timerInterval = setInterval(updateTimer, 1000);
+    });
+}
+
+// Show restart confirmation modal
+function showRestartModal() {
+    if (!gameActive) return; // Only show if game is active
+    
+    // Pause the game first
+    if (!gamePaused) {
+        // Pause game timers
+        clearInterval(spawnInterval);
+        clearInterval(timerInterval);
+        gamePaused = true;
+        
+        // Pause all emojis
+        const emojis = document.querySelectorAll('.pop-emoji');
+        emojis.forEach(emoji => {
+            emoji.style.animationPlayState = 'paused';
+            emoji.dataset.isPaused = 'true';
+            if (emoji.removalInterval) {
+                clearInterval(emoji.removalInterval);
+                emoji.removalInterval = null;
+            }
+        });
+    }
+    
+    const modal = document.getElementById('restart-confirmation-modal');
+    modal.style.display = 'flex';
+    updateRestartModalTranslation();
+    playClickSound();
+}
+
+// Update restart modal translation
+window.updateRestartModalTranslation = function() {
+    const modal = document.getElementById('restart-confirmation-modal');
+    if (!modal || modal.style.display !== 'flex') return;
+    
+    const titleElement = modal.querySelector('[data-translate="restart_game_title"]');
+    const questionElement = modal.querySelector('[data-translate="restart_game_question"]');
+    const yesBtn = document.getElementById('restart-yes-btn');
+    const noBtn = document.getElementById('restart-no-btn');
+    
+    const titleText = emojiPopTranslations['restart_game_title'][window.currentLanguage] || 'Restart Game?';
+    const questionText = emojiPopTranslations['restart_game_question'][window.currentLanguage] || 'Are you sure you want to restart? Your current game will be lost.';
+    const yesText = emojiPopTranslations['restart_yes'][window.currentLanguage] || 'Yes, Restart';
+    const noText = emojiPopTranslations['restart_no'][window.currentLanguage] || 'No, Continue Playing';
+    
+    if (titleElement) titleElement.textContent = titleText;
+    if (questionElement) questionElement.textContent = questionText;
+    if (yesBtn) yesBtn.textContent = yesText;
+    if (noBtn) noBtn.textContent = noText;
+};
+
+// Confirm restart - restart the game
+function confirmRestart() {
+    playClickSound();
+    const modal = document.getElementById('restart-confirmation-modal');
+    modal.style.display = 'none';
+    
+    // Reset game completely
+    gameActive = false;
+    gamePaused = false;
+    clearInterval(spawnInterval);
+    clearInterval(timerInterval);
+    document.getElementById('emoji-spawn-area').innerHTML = '';
+    
+    // Start fresh game
+    startGame();
+}
+
+// Cancel restart - resume game
+function cancelRestart() {
+    const modal = document.getElementById('restart-confirmation-modal');
+    modal.style.display = 'none';
+    playClickSound();
+    
+    // Resume game with countdown
+    const pauseBtn = document.getElementById('pause-btn');
+    const pauseText = emojiPopTranslations['pause_button'][window.currentLanguage] || '⏸️ Pause';
+    pauseBtn.textContent = pauseText;
+    pauseBtn.classList.remove('paused');
+    
+    document.getElementById('pause-overlay').classList.remove('active');
+    
+    // Don't resume emojis yet - wait for countdown to finish
+    showCountdown(() => {
+        gamePaused = false;
+        isCountingDown = false;
+        
+        // NOW resume all emoji animations after countdown
+        const emojis = document.querySelectorAll('.pop-emoji');
+        emojis.forEach(emoji => {
+            emoji.style.animationPlayState = 'running';
+            emoji.dataset.isPaused = 'false';
+            
+            // Restart removal interval
+            const lifetime = parseFloat(emoji.dataset.lifetime) || 3000;
+            const createdAt = parseFloat(emoji.dataset.createdAt) || Date.now();
+            const elapsed = Date.now() - createdAt;
+            const remaining = Math.max(0, lifetime - elapsed);
+            
+            if (remaining > 0) {
+                let localElapsed = elapsed;
+                const checkInterval = 50;
+                
+                const removalChecker = setInterval(() => {
+                    if (gamePaused || emoji.dataset.isPaused === 'true') return;
+                    if (!gameActive) {
+                        clearInterval(removalChecker);
+                        if (emoji.parentElement) emoji.remove();
+                        return;
+                    }
+                    
+                    localElapsed += checkInterval;
+                    if (localElapsed >= lifetime) {
+                        clearInterval(removalChecker);
+                        if (emoji.parentElement) {
+                            streak = 0;
+                            multiplier = 1;
+                            updateRainbowGlow();
+                            emoji.remove();
+                        }
+                    }
+                }, checkInterval);
+                
+                emoji.removalInterval = removalChecker;
+            } else {
+                emoji.remove();
+            }
+        });
+        
         spawnEmojisWithDifficulty();
         timerInterval = setInterval(updateTimer, 1000);
     });
@@ -979,28 +1373,45 @@ function triggerConfetti(message) {
 function displayLeaderboard() {
     const leaderboard = JSON.parse(localStorage.getItem('emojiPopLeaderboard')) || [];
     const list = document.getElementById('leaderboard-list');
+    const listStart = document.getElementById('leaderboard-list-start');
+    
+    // Clear both lists
     list.innerHTML = '';
+    if (listStart) listStart.innerHTML = '';
     
     if (leaderboard.length === 0) {
-        list.innerHTML = '<li style="list-style: none; text-align: center; opacity: 0.6;">No scores yet</li>';
+        const emptyMessage = '<li style="list-style: none; text-align: center; opacity: 0.6;">No scores yet</li>';
+        list.innerHTML = emptyMessage;
+        if (listStart) listStart.innerHTML = emptyMessage;
         return;
     }
     
     leaderboard.forEach((entry, index) => {
         const li = document.createElement('li');
-        li.innerHTML = `<strong>${entry.name}</strong>: ${entry.score} points`;
+        const currentLang = window.currentLanguage || 'en';
+        const pointsText = getTranslation('leaderboard_points', currentLang) || 'points';
+        li.innerHTML = `<strong>${entry.name}</strong>: ${entry.score} ${pointsText}`;
         if (index === 0) li.style.color = '#ffd700';
         if (index === 1) li.style.color = '#c0c0c0';
         if (index === 2) li.style.color = '#cd7f32';
         list.appendChild(li);
+        
+        // Clone for start screen leaderboard
+        if (listStart) {
+            const liClone = li.cloneNode(true);
+            listStart.appendChild(liClone);
+        }
     });
 }
+
+// Make displayLeaderboard available globally for language updates
+window.updateEmojiPopLeaderboard = displayLeaderboard;
 
 // Sound effects
 function playClickSound() {
     if (!window.isMusicMuted) {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
-        audio.volume = 0.2;
+        audio.volume = 0.1;
         audio.play().catch(e => console.log('Audio play failed:', e));
     }
 }
@@ -1008,7 +1419,7 @@ function playClickSound() {
 function playPopSound() {
     if (!window.isMusicMuted) {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
-        audio.volume = 0.25;
+        audio.volume = 0.12;
         audio.play().catch(e => console.log('Audio play failed:', e));
     }
 }
@@ -1024,7 +1435,7 @@ function playErrorSound() {
 function playGameOverSound() {
     if (!window.isMusicMuted) {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
-        audio.volume = 0.3;
+        audio.volume = 0.15;
         audio.play().catch(e => console.log('Audio play failed:', e));
     }
 }

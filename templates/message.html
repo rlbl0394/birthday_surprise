@@ -12,6 +12,25 @@
             <h2 class="sender-name" data-sender="{{ message.sender }}"><span data-translate="message_from">From</span> {{ message.sender }}</h2>
         </div>
         
+        <!-- Message Image -->
+        {% if message.id == 1 %}
+        <div class="message-image-container">
+            <img src="{{ url_for('static', filename='images/narsimlu.png') }}" alt="Narsimlu" class="message-image summer-border">
+        </div>
+        {% elif message.id == 2 %}
+        <div class="message-image-container">
+            <img src="{{ url_for('static', filename='images/matt.png') }}" alt="Matt" class="message-image autumn-border">
+        </div>
+        {% elif message.id == 3 %}
+        <div class="message-image-container">
+            <img src="{{ url_for('static', filename='images/heather.png') }}" alt="Heather" class="message-image winter-border">
+        </div>
+        {% elif message.id == 4 %}
+        <div class="message-image-container">
+            <img src="{{ url_for('static', filename='images/becca.png') }}" alt="Becca" class="message-image spring-border">
+        </div>
+        {% endif %}
+        
         <div class="message-body">
             <p class="message-text{% if message.id in [1, 2] %} message-short{% endif %}" data-translate="message_{{ message.id }}">{{ message.message | replace('\n', '<br>') | safe }}</p>
         </div>

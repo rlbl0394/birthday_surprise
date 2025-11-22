@@ -7,22 +7,68 @@
 {% block content %}
 <div class="ending-container fade-in">
     <div class="ending-content">
+        <div class="profile-image-container">
+            <img src="{{ url_for('static', filename='images/michelle.png') }}" alt="Michelle" class="profile-image">
+        </div>
         <h1 class="ending-title" data-translate="ending_title">Wishing you the best year ahead,<br><span class="name-highlight">Michelle!</span></h1>
         <p class="ending-subtitle" data-translate="ending_subtitle">May this year bring you joy, success, and wonderful memories.</p>
-        <div class="ending-decoration" id="cakeReveal" style="display: none;">✨ 🎂 ✨</div>
-        <button class="btn-primary" id="giftButton" onclick="revealGift()" style="margin-bottom: 20px;" data-translate="gift_button">
-            🎁 Click here to receive gift
+        
+        <!-- First Gift Button -->
+        <button class="btn-primary" id="giftButton1" onclick="revealGift(1)" style="margin: 0 auto 20px auto; display: block;" data-translate="gift_button_1">
+            🎁 Open Gift #1
         </button>
+        
+        <!-- First Gift Reveal (Cake) -->
+        <div id="gift1Reveal" class="gift-reveal" style="display: none;">
+            <div class="ending-decoration">✨ 🎂 ✨</div>
+        </div>
+        
+        <!-- Second Gift Button -->
+        <button class="btn-primary" id="giftButton2" onclick="revealGift(2)" style="margin: 0 auto 20px auto; display: block; opacity: 0; visibility: hidden; height: 0; overflow: hidden; padding: 0; border: 0;" data-translate="gift_button_2">
+            🎁 Open Gift #2
+        </button>
+        
+        <!-- Third Gift Button -->
+        <button class="btn-primary" id="giftButton3" onclick="revealGift(3)" style="margin: 0 auto 20px auto; display: block; opacity: 0; visibility: hidden; height: 0; overflow: hidden; padding: 0; border: 0;" data-translate="gift_button_3">
+            🎁 Open Gift #3
+        </button>
+        
+        <!-- Final Navigation Buttons (shows when all gifts opened) -->
         <div id="endingButtons" style="display: none;">
-            <a href="{{ url_for('games') }}" class="btn-primary btn-secondary btn-games" data-translate="play_games" style="margin-right: 15px;">
-                🎮 Play Games
-            </a>
-            <a href="{{ url_for('home') }}" class="btn-secondary" data-translate="back_beginning">
-                Back to Beginning
-            </a>
+            <div style="margin-bottom: 25px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn-secondary" onclick="reopenGift(2)" data-translate="view_gift_2_again">
+                    🔄 View Gift #2 Again
+                </button>
+                <button class="btn-secondary" onclick="reopenGift(3)" data-translate="view_gift_3_again">
+                    🔄 View Gift #3 Again
+                </button>
+            </div>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="{{ url_for('games') }}" class="btn-primary btn-secondary btn-games" data-translate="play_games">
+                    🎮 Play Games
+                </a>
+                <a href="{{ url_for('home') }}" class="btn-secondary" data-translate="back_beginning">
+                    Back to Beginning
+                </a>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Gift Image Modals -->
+<div id="giftModal" class="gift-modal" onclick="closeGiftModal()">
+    <div class="gift-modal-content" onclick="event.stopPropagation()">
+        <span class="gift-modal-close" onclick="closeGiftModal()">&times;</span>
+        <div id="giftModalBody"></div>
+    </div>
+</div>
+
+<!-- Full Image Modal -->
+<div id="fullImageModal" class="gift-modal" onclick="closeFullImage()" style="display: none;">
+    <span class="gift-modal-close" onclick="closeFullImage()">&times;</span>
+    <div id="fullImageContent" onclick="event.stopPropagation()"></div>
+</div>
+
 <div id="confettiContainer"></div>
 <div id="balloonContainer"></div>
 {% endblock %}
@@ -35,39 +81,430 @@
     // Play birthday song
     playBirthdaySong();
     
-    function revealGift() {
-        const giftButton = document.getElementById('giftButton');
-        const cakeReveal = document.getElementById('cakeReveal');
-        const endingButtons = document.getElementById('endingButtons');
+    // Track current modal state for translation updates
+    let currentGiftModalState = null;
+    let currentFullImageState = null;
+    let cakeWishToastTimeout = null;
+    
+    function showCakeWishToast() {
+        // Get current language
+        const lang = window.currentLanguage || 'en';
+        const line1 = window.getTranslation ? window.getTranslation('cake_wish_line1', lang) : "Here's a cake for your special day!";
+        const line2 = window.getTranslation ? window.getTranslation('cake_wish_line2', lang) : "Now make a wish!";
         
-        // Play sparkle/magic sound
-        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3');
-        audio.volume = 0.25;
-        audio.play().catch(() => {}); // Ignore errors if audio fails
+        // Remove existing toast if any
+        const existingToast = document.getElementById('cakeWishToast');
+        if (existingToast) {
+            existingToast.remove();
+        }
         
-        // Hide button with animation
-        giftButton.style.transform = 'scale(0)';
-        giftButton.style.opacity = '0';
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.id = 'cakeWishToast';
+        toast.className = 'cake-wish-toast';
+        toast.innerHTML = `<div>${line1}</div><div style="margin-top: 8px;">${line2}</div>`;
+        document.body.appendChild(toast);
         
-        setTimeout(() => {
-            giftButton.style.display = 'none';
-            cakeReveal.style.display = 'block';
-            cakeReveal.style.animation = 'cakeAppear 1s ease-out';
-            endingButtons.style.display = 'block';
-            endingButtons.style.animation = 'fadeIn 1s ease-in';
-            
-            // Launch celebrations
-            createConfetti();
-            createBalloons();
-        }, 300);
+        // Auto-remove after 5 seconds
+        if (cakeWishToastTimeout) {
+            clearTimeout(cakeWishToastTimeout);
+        }
+        cakeWishToastTimeout = setTimeout(() => {
+            removeCakeWishToast();
+        }, 5000);
     }
     
-    function createConfetti() {
-        const container = document.getElementById('confettiContainer');
-        const confettiCount = 100;
-        const colors = ['#FFD700', '#FF69B4', '#87CEEB', '#98FB98', '#DDA0DD', '#F0E68C'];
+    function removeCakeWishToast() {
+        const toast = document.getElementById('cakeWishToast');
+        if (toast) {
+            toast.classList.add('fade-out');
+            setTimeout(() => {
+                toast.remove();
+            }, 500);
+        }
+        if (cakeWishToastTimeout) {
+            clearTimeout(cakeWishToastTimeout);
+            cakeWishToastTimeout = null;
+        }
+    }
+    
+    function revealGift(giftNumber) {
+        console.log('revealGift called with giftNumber:', giftNumber);
         
-        for (let i = 0; i < confettiCount; i++) {
+        const giftButton = document.getElementById(`giftButton${giftNumber}`);
+        
+        if (!giftButton) {
+            console.error(`Gift button ${giftNumber} not found`);
+            return;
+        }
+        
+        console.log('Gift button found:', giftButton);
+        
+        // Play sparkle/magic sound (non-blocking)
+        try {
+            if (typeof playMagicSound === 'function') {
+                playMagicSound();
+            }
+        } catch (e) {
+            console.error('Error playing magic sound:', e);
+        }
+        
+        if (giftNumber === 1) {
+            console.log('Processing gift #1');
+            // First gift shows inline (cake)
+            const gift1Reveal = document.getElementById('gift1Reveal');
+            if (!gift1Reveal) {
+                console.error('gift1Reveal element not found');
+                return;
+            }
+            
+            console.log('gift1Reveal found, showing with animation');
+            
+            // Add transition to button
+            giftButton.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            giftButton.style.transform = 'scale(0)';
+            giftButton.style.opacity = '0';
+            
+            setTimeout(() => {
+                // Hide button smoothly
+                giftButton.style.visibility = 'hidden';
+                giftButton.style.height = '0';
+                giftButton.style.padding = '0';
+                giftButton.style.margin = '0';
+                giftButton.style.border = '0';
+                giftButton.style.overflow = 'hidden';
+                
+                // Show cake with fade in
+                gift1Reveal.style.display = 'block';
+                gift1Reveal.style.opacity = '0';
+                gift1Reveal.style.transition = 'opacity 1s ease-in';
+                
+                // Trigger fade in
+                setTimeout(() => {
+                    gift1Reveal.style.opacity = '1';
+                    // Show cake wish toast
+                    showCakeWishToast();
+                }, 50);
+                
+                console.log('Cake fading in');
+                
+                // Launch celebrations
+                try {
+                    if (typeof createConfetti === 'function') {
+                        createConfetti(80);
+                    }
+                    if (typeof createBalloons === 'function') {
+                        createBalloons(10);
+                    }
+                } catch (e) {
+                    console.error('Error creating celebrations:', e);
+                }
+                
+                // Show second gift button after animation completes
+                setTimeout(() => {
+                    const giftButton2 = document.getElementById('giftButton2');
+                    if (giftButton2) {
+                        console.log('Showing gift button #2');
+                        // Reset to normal button styles first
+                        giftButton2.style.height = 'auto';
+                        giftButton2.style.padding = '';
+                        giftButton2.style.margin = '0 auto 20px auto';
+                        giftButton2.style.display = 'block';
+                        giftButton2.style.border = '';
+                        giftButton2.style.overflow = '';
+                        giftButton2.style.visibility = 'visible';
+                        giftButton2.style.opacity = '0';
+                        giftButton2.style.transition = 'opacity 1s ease-in';
+                        setTimeout(() => {
+                            giftButton2.style.opacity = '1';
+                        }, 50);
+                    } else {
+                        console.error('giftButton2 not found');
+                    }
+                }, 500);
+            }, 300);
+            
+        } else if (giftNumber === 2) {
+            // Remove cake wish toast when opening Gift #2
+            removeCakeWishToast();
+            
+            // Second gift shows in modal (cat yoga)
+            const title = window.getTranslation ? window.getTranslation('gift_title_cat_yoga', window.currentLanguage || 'en') : 'Team outing: Cat Yoga';
+            showGiftModal(title, "{{ url_for('static', filename='images/cat_yoga.png') }}", 'Cat Yoga');
+            
+            // Hide button with fade out
+            giftButton.style.transition = 'opacity 0.3s ease';
+            giftButton.style.opacity = '0';
+            
+            setTimeout(() => {
+                giftButton.style.visibility = 'hidden';
+                giftButton.style.height = '0';
+                giftButton.style.padding = '0';
+                giftButton.style.margin = '0';
+                giftButton.style.border = '0';
+                giftButton.style.overflow = 'hidden';
+                
+                const giftButton3 = document.getElementById('giftButton3');
+                if (giftButton3) {
+                    giftButton3.style.height = 'auto';
+                    giftButton3.style.padding = '';
+                    giftButton3.style.margin = '0 auto 20px auto';
+                    giftButton3.style.display = 'block';
+                    giftButton3.style.border = '';
+                    giftButton3.style.overflow = '';
+                    giftButton3.style.visibility = 'visible';
+                    giftButton3.style.opacity = '0';
+                    giftButton3.style.transition = 'opacity 1s ease-in';
+                    setTimeout(() => {
+                        giftButton3.style.opacity = '1';
+                    }, 50);
+                }
+            }, 300);
+            
+        } else if (giftNumber === 3) {
+            // Third gift shows in modal (team portrait)
+            const title = window.getTranslation ? window.getTranslation('gift_title_team_portrait', window.currentLanguage || 'en') : 'Team Portrait';
+            showGiftModal(title, "{{ url_for('static', filename='images/team_portrait.png') }}", 'Team Portrait');
+            
+            // Hide button with fade out
+            giftButton.style.transition = 'opacity 0.3s ease';
+            giftButton.style.opacity = '0';
+            
+            setTimeout(() => {
+                giftButton.style.display = 'none';
+                const endingButtons = document.getElementById('endingButtons');
+                if (endingButtons) {
+                    endingButtons.style.display = 'block';
+                    endingButtons.style.opacity = '0';
+                    endingButtons.style.transition = 'opacity 1s ease-in';
+                    setTimeout(() => {
+                        endingButtons.style.opacity = '1';
+                    }, 50);
+                }
+            }, 300);
+        }
+    }
+    
+    function showGiftModal(decoration, imageSrc, altText, showEffects = true) {
+        const modal = document.getElementById('giftModal');
+        const modalBody = document.getElementById('giftModalBody');
+        
+        // Store current state for translation updates
+        currentGiftModalState = { decoration, imageSrc, altText };
+        
+        // Get current language
+        const lang = window.currentLanguage || 'en';
+        
+        // Helper function to get translation
+        const t = (key) => {
+            if (window.getTranslation) {
+                return window.getTranslation(key, lang);
+            }
+            return key;
+        };
+        
+        modalBody.innerHTML = `
+            <h2 id="giftModalTitle" style="color: #fff; font-size: 2rem; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">${decoration}</h2>
+            <img src="${imageSrc}" alt="${altText}" class="gift-modal-image" style="cursor: pointer;" title="Click to view full size">
+            <p id="giftModalHint" style="color: #FFD700; font-size: 1.1rem; margin-top: 20px; font-style: italic; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">${t('click_for_details')}</p>
+        `;
+        
+        // Add click handler to the image
+        const img = modalBody.querySelector('img');
+        img.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openFullImage(imageSrc, altText);
+        });
+        
+        modal.style.display = 'flex';
+        modal.style.animation = 'fadeIn 0.3s ease-in';
+        
+        // Launch celebrations only on first open
+        if (showEffects) {
+            createConfetti(100);
+            createBalloons(15);
+            createFireworks();
+        }
+    }
+    
+    function openFullImage(imageSrc, altText) {
+        const fullImageModal = document.getElementById('fullImageModal');
+        const fullImageContent = document.getElementById('fullImageContent');
+        
+        // Store current state for translation updates
+        currentFullImageState = { imageSrc, altText };
+        
+        // Get current language
+        const lang = window.currentLanguage || 'en';
+        
+        // Helper function to get translation
+        const t = (key) => {
+            if (window.getTranslation) {
+                return window.getTranslation(key, lang);
+            }
+            return key;
+        };
+        
+        let description = '';
+        if (altText === 'Cat Yoga') {
+            description = `
+                <h3 style="color: #FFD700; margin-bottom: 20px; font-size: 1.5rem;">${t('img_gen_details')}</h3>
+                <p style="margin-bottom: 15px;"><strong>${t('model_text_prompt')}</strong> GPT-5.1</p>
+                <p style="margin-bottom: 20px;"><strong>${t('model_images')}</strong> DALL·E 3</p>
+                <h4 style="color: #FFD700; margin-bottom: 10px; font-size: 1.2rem;">${t('prompt_label')}</h4>
+                <p style="margin-bottom: 15px;">${t('cat_yoga_intro')}</p>
+                <h4 style="color: #FFD700; margin-bottom: 10px; font-size: 1.2rem;">${t('height_tier_details')}</h4>
+                <ul style="margin-bottom: 15px; padding-left: 20px;">
+                    <li>${t('cat_yoga_person1')}</li>
+                    <li>${t('cat_yoga_person2')}</li>
+                    <li>${t('cat_yoga_person3')}</li>
+                    <li>${t('cat_yoga_person4')}</li>
+                </ul>
+                <h4 style="color: #FFD700; margin-bottom: 10px; font-size: 1.2rem;">${t('scene_requirements')}</h4>
+                <ul style="padding-left: 20px;">
+                    <li>${t('cat_yoga_scene1')}</li>
+                    <li>${t('cat_yoga_scene2')}
+                        <ul style="padding-left: 20px; margin-top: 5px;">
+                            <li>${t('cat_yoga_scene2a')}</li>
+                            <li>${t('cat_yoga_scene2b')}</li>
+                        </ul>
+                    </li>
+                    <li>${t('cat_yoga_scene3')}</li>
+                    <li>${t('cat_yoga_scene4')}</li>
+                </ul>
+            `;
+        } else if (altText === 'Team Portrait') {
+            description = `
+                <h3 style="color: #FFD700; margin-bottom: 20px; font-size: 1.5rem;">${t('img_gen_details')}</h3>
+                <p style="margin-bottom: 15px;"><strong>${t('model_text_prompt')}</strong> GPT-5.1</p>
+                <p style="margin-bottom: 20px;"><strong>${t('model_images')}</strong> DALL·E 3</p>
+                <h4 style="color: #FFD700; margin-bottom: 10px; font-size: 1.2rem;">${t('prompt_label')}</h4>
+                <p style="margin-bottom: 15px;">${t('team_portrait_intro')}</p>
+                <h4 style="color: #FFD700; margin-bottom: 10px; font-size: 1.2rem;">${t('details_label')}</h4>
+                <ul style="padding-left: 20px;">
+                    <li>${t('team_portrait_detail1')}</li>
+                    <li>${t('team_portrait_detail2')}</li>
+                    <li>${t('team_portrait_detail3')}</li>
+                </ul>
+            `;
+        }
+        
+        fullImageContent.innerHTML = `
+            <div style="display: flex; gap: 30px; align-items: flex-start; max-width: 95vw; max-height: 90vh;">
+                <div style="flex-shrink: 0;">
+                    <img src="${imageSrc}" alt="${altText}" style="max-width: 60vw; max-height: 90vh; width: auto; height: auto; border-radius: 15px; box-shadow: 0 10px 50px rgba(0,0,0,0.8);">
+                </div>
+                <div style="flex: 1; max-height: 90vh; overflow-y: auto; color: #fff; text-align: left; padding-right: 20px; line-height: 1.6;">
+                    ${description}
+                </div>
+            </div>
+        `;
+        
+        fullImageModal.style.display = 'flex';
+        fullImageModal.style.animation = 'fadeIn 0.3s ease-in';
+    }
+    
+    function closeGiftModal() {
+        const modal = document.getElementById('giftModal');
+        modal.style.animation = 'fadeOut 0.2s ease-out';
+        setTimeout(() => {
+            modal.style.display = 'none';
+            currentGiftModalState = null;
+            modal.style.animation = '';
+        }, 200);
+    }
+    
+    function closeFullImage() {
+        const fullImageModal = document.getElementById('fullImageModal');
+        fullImageModal.style.animation = 'fadeOut 0.2s ease-out';
+        setTimeout(() => {
+            fullImageModal.style.display = 'none';
+            currentFullImageState = null;
+            fullImageModal.style.animation = '';
+        }, 200);
+    }
+    
+    // Function to update gift modal translations when language changes
+    window.updateGiftModalTranslations = function() {
+        // Update cake wish toast if visible
+        const toast = document.getElementById('cakeWishToast');
+        if (toast) {
+            const lang = window.currentLanguage || 'en';
+            const line1 = window.getTranslation ? window.getTranslation('cake_wish_line1', lang) : "Here's a cake for your special day!";
+            const line2 = window.getTranslation ? window.getTranslation('cake_wish_line2', lang) : "Now make a wish!";
+            toast.innerHTML = `<div>${line1}</div><div style="margin-top: 8px;">${line2}</div>`;
+        }
+        
+        // Update gift modal by regenerating it with new translations
+        if (currentGiftModalState) {
+            const lang = window.currentLanguage || 'en';
+            const { decoration, imageSrc, altText } = currentGiftModalState;
+            
+            // Get translated title
+            let titleKey = '';
+            if (altText === 'Cat Yoga') {
+                titleKey = 'gift_title_cat_yoga';
+            } else if (altText === 'Team Portrait') {
+                titleKey = 'gift_title_team_portrait';
+            }
+            
+            const translatedTitle = (titleKey && window.getTranslation) 
+                ? window.getTranslation(titleKey, lang) 
+                : decoration;
+            
+            // Regenerate modal content with translations
+            const modalBody = document.getElementById('giftModalBody');
+            if (modalBody) {
+                const t = (key) => window.getTranslation ? window.getTranslation(key, lang) : key;
+                
+                modalBody.innerHTML = `
+                    <h2 id="giftModalTitle" style="color: #fff; font-size: 2rem; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">${translatedTitle}</h2>
+                    <img src="${imageSrc}" alt="${altText}" class="gift-modal-image" style="cursor: pointer;" title="Click to view full size">
+                    <p id="giftModalHint" style="color: #FFD700; font-size: 1.1rem; margin-top: 20px; font-style: italic; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">${t('click_for_details')}</p>
+                `;
+                
+                // Re-add click handler
+                const img = modalBody.querySelector('img');
+                if (img) {
+                    img.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        openFullImage(imageSrc, altText);
+                    });
+                }
+            }
+        }
+        
+        // Update full image modal if visible
+        if (currentFullImageState) {
+            openFullImage(currentFullImageState.imageSrc, currentFullImageState.altText);
+        }
+    };
+    
+    function reopenGift(giftNumber) {
+        playMagicSound();
+        
+        if (giftNumber === 2) {
+            const title = window.getTranslation ? window.getTranslation('gift_title_cat_yoga', window.currentLanguage || 'en') : 'Team outing: Cat Yoga';
+            showGiftModal(title, "{{ url_for('static', filename='images/cat_yoga.png') }}", 'Cat Yoga', false);
+        } else if (giftNumber === 3) {
+            const title = window.getTranslation ? window.getTranslation('gift_title_team_portrait', window.currentLanguage || 'en') : 'Team Portrait';
+            showGiftModal(title, "{{ url_for('static', filename='images/team_portrait.png') }}", 'Team Portrait', false);
+        }
+    }
+    
+    function playMagicSound() {
+        if (!window.isMusicMuted) {
+            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3');
+            audio.volume = 0.12;
+            audio.play().catch(() => {});
+        }
+    }
+    
+    function createConfetti(count = 100) {
+        const container = document.getElementById('confettiContainer');
+        const colors = ['#FFD700', '#FF69B4', '#87CEEB', '#98FB98', '#DDA0DD', '#F0E68C', '#FF6347', '#40E0D0'];
+        
+        for (let i = 0; i < count; i++) {
             const confetti = document.createElement('div');
             confetti.classList.add('confetti');
             confetti.style.left = Math.random() * 100 + '%';
@@ -80,12 +517,11 @@
         }
     }
     
-    function createBalloons() {
+    function createBalloons(count = 15) {
         const container = document.getElementById('balloonContainer');
-        const balloonCount = 15;
-        const balloonEmojis = ['🎈', '🎈', '🎈'];
+        const balloonEmojis = ['🎈', '🎈', '🎈', '🎉', '🎊'];
         
-        for (let i = 0; i < balloonCount; i++) {
+        for (let i = 0; i < count; i++) {
             const balloon = document.createElement('div');
             balloon.classList.add('balloon');
             balloon.innerHTML = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
@@ -96,6 +532,25 @@
             container.appendChild(balloon);
             
             setTimeout(() => balloon.remove(), 8000);
+        }
+    }
+    
+    function createFireworks() {
+        const container = document.getElementById('confettiContainer');
+        const fireworkCount = 5;
+        const fireworkEmojis = ['✨', '💫', '⭐', '🌟', '💥'];
+        
+        for (let i = 0; i < fireworkCount; i++) {
+            setTimeout(() => {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.innerHTML = fireworkEmojis[Math.floor(Math.random() * fireworkEmojis.length)];
+                firework.style.left = (20 + Math.random() * 60) + '%';
+                firework.style.top = (20 + Math.random() * 60) + '%';
+                container.appendChild(firework);
+                
+                setTimeout(() => firework.remove(), 2000);
+            }, i * 300);
         }
     }
 </script>

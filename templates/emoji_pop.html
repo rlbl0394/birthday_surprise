@@ -10,12 +10,20 @@
     
     <!-- Name Input Screen -->
     <div class="name-input-screen" id="name-input-screen">
-        <p class="game-instructions" data-translate="emoji_pop_instructions">Pop as many emojis as you can in 30 seconds!</p>
+        <p class="game-instructions" data-translate="emoji_pop_instructions">Pop emojis and build combos for up to 6x multiplier! 30 seconds of fast-paced fun!</p>
         <div class="name-input-box">
             <label for="player-name" data-translate="enter_name">Enter Your Name:</label>
             <input type="text" id="player-name" maxlength="20" placeholder="Your name">
             <p class="name-error" id="name-error" style="display: none;" data-translate="name_error">Please enter a valid name</p>
             <button class="start-game-btn" id="start-game-btn" data-translate="start_game">Start Game</button>
+        </div>
+        
+        <!-- Leaderboard on Name Input Screen -->
+        <div class="leaderboard" style="margin-top: 40px;">
+            <h3 data-translate="leaderboard_title">🏆 Leaderboard</h3>
+            <ol id="leaderboard-list-start">
+                <!-- Leaderboard entries will be added here -->
+            </ol>
         </div>
     </div>
     
@@ -30,7 +38,12 @@
                 <span data-translate="time_label">Time:</span>
                 <span id="timer">30</span>s
             </div>
+            <div class="stat-item multiplier-display" id="multiplier-display" style="visibility: hidden;">
+                <span>🔥</span>
+                <span id="multiplier">1</span>x
+            </div>
             <button class="pause-btn" id="pause-btn" data-translate="pause_button">⏸️ Pause</button>
+            <button class="restart-btn" id="restart-btn" onclick="showRestartModal()" data-translate="restart_button">🔄 Restart</button>
         </div>
         
         <div class="countdown-overlay" id="countdown-overlay" style="display: none;">
@@ -39,6 +52,19 @@
         
         <div class="emoji-spawn-area" id="emoji-spawn-area">
             <!-- Emojis will spawn here -->
+            <!-- Multiplier popup -->
+            <div class="multiplier-popup" id="multiplier-popup">x2</div>
+        </div>
+        
+        <!-- Combo Meter -->
+        <div class="combo-meter-container" id="combo-meter-container">
+            <div class="combo-meter-label">
+                <span id="combo-level-text">COMBO</span>
+                <span id="combo-multiplier-text">x1</span>
+            </div>
+            <div class="combo-meter-bar">
+                <div class="combo-meter-fill" id="combo-meter-fill"></div>
+            </div>
         </div>
     </div>
     
@@ -89,6 +115,22 @@
                     Yes, Exit
                 </button>
                 <button class="modal-btn same-name-btn" id="exit-no-btn" data-translate="exit_no">
+                    No, Continue Playing
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Restart Confirmation Modal -->
+    <div class="play-again-modal" id="restart-confirmation-modal" style="display: none;">
+        <div class="modal-content">
+            <h3 data-translate="restart_game_title">Restart Game?</h3>
+            <p data-translate="restart_game_question">Are you sure you want to restart? Your current game will be lost.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn new-name-btn" id="restart-yes-btn" data-translate="restart_yes">
+                    Yes, Restart
+                </button>
+                <button class="modal-btn same-name-btn" id="restart-no-btn" data-translate="restart_no">
                     No, Continue Playing
                 </button>
             </div>

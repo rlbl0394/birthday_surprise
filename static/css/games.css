@@ -842,6 +842,23 @@
     flex-wrap: wrap;
 }
 
+.multiplier-display {
+    background: linear-gradient(135deg, #FF6B00 0%, #FF9500 100%);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4);
+    animation: multiplierPulse 0.5s ease-in-out infinite;
+    gap: 0.3rem;
+}
+
+@keyframes multiplierPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); box-shadow: 0 6px 18px rgba(255, 107, 0, 0.6); }
+}
+
 .pause-btn {
     background: linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 100%);
     color: white;
@@ -862,6 +879,24 @@
 
 .pause-btn.paused {
     background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+}
+
+.restart-btn {
+    background: linear-gradient(135deg, #FFA726 0%, #FF9800 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 167, 38, 0.4);
+}
+
+.restart-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(255, 167, 38, 0.6);
 }
 
 .countdown-overlay {
@@ -904,10 +939,144 @@
     position: relative;
     width: 100%;
     height: 500px;
+    min-height: 500px;
+    max-height: 500px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 20px;
     border: 2px solid rgba(255, 255, 255, 0.1);
     overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Rainbow glow effect for streak combo */
+.emoji-spawn-area.rainbow-glow {
+    animation: rainbowGlow 2s linear infinite;
+    box-shadow: 0 0 var(--glow-intensity, 20px) rgba(255, 0, 255, 0.5);
+}
+
+/* Pulsation effect when crossing combo threshold */
+.emoji-spawn-area.glow-pulse {
+    animation: rainbowGlow 2s linear infinite, glowPulse 0.6s ease-out;
+}
+
+@keyframes glowPulse {
+    0% { 
+        transform: scale(1);
+    }
+    50% { 
+        transform: scale(1.02);
+        filter: brightness(1.3);
+    }
+    100% { 
+        transform: scale(1);
+    }
+}
+
+@keyframes rainbowGlow {
+    0% { box-shadow: 0 0 var(--glow-intensity, 20px) rgba(255, 0, 0, 0.8); }
+    16.66% { box-shadow: 0 0 var(--glow-intensity, 20px) rgba(255, 165, 0, 0.8); }
+    33.33% { box-shadow: 0 0 var(--glow-intensity, 20px) rgba(255, 255, 0, 0.8); }
+    50% { box-shadow: 0 0 var(--glow-intensity, 20px) rgba(0, 255, 0, 0.8); }
+    66.66% { box-shadow: 0 0 var(--glow-intensity, 20px) rgba(0, 0, 255, 0.8); }
+    83.33% { box-shadow: 0 0 var(--glow-intensity, 20px) rgba(128, 0, 255, 0.8); }
+    100% { box-shadow: 0 0 var(--glow-intensity, 20px) rgba(255, 0, 0, 0.8); }
+}
+
+/* Combo Meter */
+.combo-meter-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto 0;
+    padding: 0;
+}
+
+.combo-meter-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.combo-meter-bar {
+    width: 100%;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.combo-meter-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    transition: width 0.3s ease;
+    border-radius: 15px;
+    position: relative;
+}
+
+.combo-meter-fill.rainbow-fill {
+    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff, #ff0000);
+    background-size: 200% 100%;
+    animation: rainbowSlide 2s linear infinite;
+}
+
+.combo-meter-fill.meter-pulse {
+    animation: meterPulse 0.5s ease-out, rainbowSlide 2s linear infinite;
+}
+
+@keyframes rainbowSlide {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+@keyframes meterPulse {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.2); box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+}
+
+/* Multiplier popup - faint and non-distracting */
+.multiplier-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 6rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.25);
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 10;
+    transition: none;
+}
+
+.multiplier-popup.show-popup {
+    animation: multiplierFade 1.5s ease-out;
+}
+
+@keyframes multiplierFade {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+    40% {
+        opacity: 0.4;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
 }
 
 .pop-emoji {
@@ -973,8 +1142,17 @@
     animation: rotate 2s linear infinite;
 }
 
+.falling-emoji.bad-emoji {
+    animation: rotate 2s linear infinite, badGlow 1s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
+}
+
 .falling-emoji.caught {
     animation: catchAnimation 0.3s ease-out forwards;
+}
+
+.falling-emoji.bad-caught {
+    animation: badCatchAnimation 0.3s ease-out forwards;
 }
 
 @keyframes rotate {
@@ -982,9 +1160,22 @@
     100% { transform: rotate(360deg); }
 }
 
+@keyframes badGlow {
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8)); }
+    50% { filter: drop-shadow(0 0 15px rgba(255, 0, 0, 1)); }
+}
+
 @keyframes catchAnimation {
     0% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.5); }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes badCatchAnimation {
+    0% { transform: scale(1); opacity: 1; filter: brightness(1); }
+    25% { transform: scale(1.3); filter: brightness(3) hue-rotate(0deg); }
+    50% { transform: scale(1.2) rotate(20deg); filter: brightness(2) hue-rotate(180deg); }
+    75% { transform: scale(1.3) rotate(-20deg); filter: brightness(3) hue-rotate(360deg); }
     100% { transform: scale(0); opacity: 0; }
 }
 

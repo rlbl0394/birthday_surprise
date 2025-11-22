@@ -1,6 +1,5 @@
 // Emoji Catch Game - use globals from animations.js
 let caughtCount = 0;
-let missedCount = 0;
 let timeLeft = 30;
 let gameActive = false;
 let gamePaused = false;
@@ -10,9 +9,11 @@ let timerInterval;
 let countdownInterval;
 let isCountingDown = false;
 let isPauseTransitioning = false;
+let lives = 3;
 
 // Falling emoji configuration
 const fallingEmojis = ['🎈', '🎉', '🎊', '🎁', '🌟', '⭐', '💫', '✨', '🎀', '🎂', '🍰', '🧁'];
+const badEmojis = ['💣', '☠️', '👻', '🔥', '⚡', '💀'];
 let basket;
 let basketX = 0;
 
@@ -44,6 +45,15 @@ const emojiCatchTranslations = {
         'hi': 'पकड़े गए:',
         'tl': 'Nahuli:',
         'ja': 'キャッチ：'
+    },
+    'lives_label': {
+        'en': 'Lives:',
+        'es': 'Vidas:',
+        'zh': '生命：',
+        'fr': 'Vies:',
+        'hi': 'जीवन:',
+        'tl': 'Buhay:',
+        'ja': 'ライフ：'
     },
     'missed_label': {
         'en': 'Missed:',
@@ -171,6 +181,42 @@ const emojiCatchTranslations = {
         'tl': 'Hindi, Magpatuloy sa Paglalaro',
         'ja': 'いいえ、続ける'
     },
+    'restart_game_title': {
+        'en': 'Restart Game?',
+        'es': '¿Reiniciar Juego?',
+        'zh': '重新开始游戏？',
+        'fr': 'Redémarrer le Jeu?',
+        'hi': 'खेल पुनः प्रारंभ करें?',
+        'tl': 'I-restart ang Laro?',
+        'ja': 'ゲームを再開？'
+    },
+    'restart_game_question': {
+        'en': 'Are you sure you want to restart? Your current game will be lost.',
+        'es': '¿Estás seguro de que quieres reiniciar? Tu juego actual se perderá.',
+        'zh': '确定要重新开始吗？当前游戏将会丢失。',
+        'fr': 'Êtes-vous sûr de vouloir redémarrer? Votre partie actuelle sera perdue.',
+        'hi': 'क्या आप वाकई पुनः प्रारंभ करना चाहते हैं? आपका वर्तमान खेल खो जाएगा।',
+        'tl': 'Sigurado ka bang gusto mong i-restart? Mawawala ang iyong kasalukuyang laro.',
+        'ja': '本当に再開しますか？現在のゲームは失われます。'
+    },
+    'restart_yes': {
+        'en': 'Yes, Restart',
+        'es': 'Sí, Reiniciar',
+        'zh': '是的，重新开始',
+        'fr': 'Oui, Redémarrer',
+        'hi': 'हां, पुनः प्रारंभ करें',
+        'tl': 'Oo, I-restart',
+        'ja': 'はい、再開'
+    },
+    'restart_no': {
+        'en': 'No, Continue Playing',
+        'es': 'No, Seguir Jugando',
+        'zh': '不，继续游戏',
+        'fr': 'Non, Continuer à Jouer',
+        'hi': 'नहीं, खेलना जारी रखें',
+        'tl': 'Hindi, Magpatuloy sa Paglalaro',
+        'ja': 'いいえ、続ける'
+    },
     'game_paused': {
         'en': 'PAUSED',
         'es': 'PAUSADO',
@@ -188,6 +234,42 @@ const emojiCatchTranslations = {
         'hi': 'जारी रखने के लिए SPACE या ▶️ जारी रखें दबाएं',
         'tl': 'Pindutin ang SPACE o ▶️ Ituloy upang magpatuloy',
         'ja': 'スペースキーまたは ▶️ 再開を押して続行'
+    },
+    'reload_game_title': {
+        'en': 'Leave Game?',
+        'es': '¿Salir del Juego?',
+        'zh': '离开游戏？',
+        'fr': 'Quitter le Jeu?',
+        'hi': 'खेल छोड़ें?',
+        'tl': 'Umalis sa Laro?',
+        'ja': 'ゲームを離れる？'
+    },
+    'reload_game_question': {
+        'en': 'Are you sure you want to leave? Your current game will be lost.',
+        'es': '¿ Estás seguro de que quieres salir? Tu juego actual se perderá.',
+        'zh': '确定要离开吗？当前游戏将会丢失。',
+        'fr': 'Êtes-vous sûr de vouloir partir? Votre partie actuelle sera perdue.',
+        'hi': 'क्या आप वाकई छोड़ना चाहते हैं? आपका वर्तमान खेल खो जाएगा।',
+        'tl': 'Sigurado ka bang gusto mong umalis? Mawawala ang iyong kasalukuyang laro.',
+        'ja': '本当に離れますか？現在のゲームは失われます。'
+    },
+    'reload_yes': {
+        'en': 'Yes, Leave',
+        'es': 'Sí, Salir',
+        'zh': '是的，离开',
+        'fr': 'Oui, Quitter',
+        'hi': 'हां, छोड़ें',
+        'tl': 'Oo, Umalis',
+        'ja': 'はい、離れる'
+    },
+    'reload_no': {
+        'en': 'No, Stay',
+        'es': 'No, Quedarme',
+        'zh': '不，留下',
+        'fr': 'Non, Rester',
+        'hi': 'नहीं, रहें',
+        'tl': 'Hindi, Manatili',
+        'ja': 'いいえ、留まる'
     }
 };
 
@@ -224,6 +306,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('exit-yes-btn').addEventListener('click', confirmExit);
     document.getElementById('exit-no-btn').addEventListener('click', cancelExit);
     
+    // Restart confirmation modal buttons
+    document.getElementById('restart-yes-btn').addEventListener('click', confirmRestart);
+    document.getElementById('restart-no-btn').addEventListener('click', cancelRestart);
+    
     // Add Enter key support for name input
     document.getElementById('player-name').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
@@ -242,6 +328,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Display leaderboard
     displayLeaderboard();
+    
+    // Prevent accidental page reload/close during active game
+    window.addEventListener('beforeunload', function(e) {
+        // Don't show warning if user already confirmed exit through our modal
+        if (window.isNavigatingAway) {
+            return;
+        }
+        // Only show warning if game is active (not on start screen or game over screen)
+        if (gameActive || (playerName && document.getElementById('game-screen').style.display === 'block' && document.getElementById('game-over-screen').style.display === 'none')) {
+            e.preventDefault();
+            e.returnValue = ''; // Chrome requires returnValue to be set
+            return ''; // For older browsers
+        }
+    });
 });
 
 // Play background music
@@ -254,7 +354,7 @@ function playEmojiCatchBackgroundMusic() {
     
     // Create new game music
     window.gameBackgroundMusic = new Audio('https://www.bensound.com/bensound-music/bensound-jazzyfrenchy.mp3');
-    window.gameBackgroundMusic.volume = 0.15;
+    window.gameBackgroundMusic.volume = 0.08;
     window.gameBackgroundMusic.loop = true;
     
     // Set as current background music for toggle button
@@ -316,14 +416,14 @@ function validateAndStartGame() {
 // Start game
 function startGame() {
     caughtCount = 0;
-    missedCount = 0;
     timeLeft = 30;
+    lives = 3;
     gameActive = false;
     gamePaused = false;
     
     document.getElementById('score').textContent = caughtCount;
-    document.getElementById('missed').textContent = missedCount;
     document.getElementById('timer').textContent = timeLeft;
+    updateLivesDisplay();
     
     // Set pause button text with translation
     const pauseText = emojiCatchTranslations['pause_button'][window.currentLanguage] || '⏸️ Pause';
@@ -373,8 +473,14 @@ function spawnFallingEmoji() {
     
     const catchArea = document.getElementById('catch-area');
     const emoji = document.createElement('div');
-    emoji.className = 'falling-emoji';
-    emoji.textContent = fallingEmojis[Math.floor(Math.random() * fallingEmojis.length)];
+    
+    // 30% chance to spawn bad emoji
+    const isBadEmoji = Math.random() < 0.3;
+    emoji.className = isBadEmoji ? 'falling-emoji bad-emoji' : 'falling-emoji';
+    emoji.textContent = isBadEmoji 
+        ? badEmojis[Math.floor(Math.random() * badEmojis.length)]
+        : fallingEmojis[Math.floor(Math.random() * fallingEmojis.length)];
+    emoji.dataset.isBad = isBadEmoji;
     
     // Random horizontal position
     const maxX = catchArea.clientWidth - 40;
@@ -421,20 +527,38 @@ function spawnFallingEmoji() {
             const basketRect = basket.getBoundingClientRect();
             
             if (checkCollision(emojiRect, basketRect)) {
-                caughtCount++;
-                document.getElementById('score').textContent = caughtCount;
-                emoji.classList.add('caught');
-                playCatchSound();
-                clearInterval(fallInterval);
-                emoji.fallInterval = null;
-                setTimeout(() => emoji.remove(), 300);
-                return;
+                const isBadEmoji = emoji.dataset.isBad === 'true';
+                
+                if (isBadEmoji) {
+                    // Bad emoji caught - lose a life
+                    lives--;
+                    updateLivesDisplay();
+                    emoji.classList.add('bad-caught');
+                    playErrorSound();
+                    clearInterval(fallInterval);
+                    emoji.fallInterval = null;
+                    setTimeout(() => emoji.remove(), 300);
+                    
+                    // Check if game over due to no lives
+                    if (lives <= 0) {
+                        endGame();
+                    }
+                    return;
+                } else {
+                    // Good emoji caught
+                    caughtCount++;
+                    document.getElementById('score').textContent = caughtCount;
+                    emoji.classList.add('caught');
+                    playCatchSound();
+                    clearInterval(fallInterval);
+                    emoji.fallInterval = null;
+                    setTimeout(() => emoji.remove(), 300);
+                    return;
+                }
             }
             
-            // Check if missed (reached bottom)
+            // Check if reached bottom
             if (posY > catchArea.clientHeight - 40) {
-                missedCount++;
-                document.getElementById('missed').textContent = missedCount;
                 playMissSound();
                 clearInterval(fallInterval);
                 emoji.fallInterval = null;
@@ -595,20 +719,38 @@ function togglePause() {
                         const basketRect = basket.getBoundingClientRect();
                         
                         if (checkCollision(emojiRect, basketRect)) {
-                            caughtCount++;
-                            document.getElementById('score').textContent = caughtCount;
-                            emoji.classList.add('caught');
-                            playCatchSound();
-                            clearInterval(fallInterval);
-                            emoji.fallInterval = null;
-                            setTimeout(() => emoji.remove(), 300);
-                            return;
+                            const isBadEmoji = emoji.dataset.isBad === 'true';
+                            
+                            if (isBadEmoji) {
+                                // Bad emoji caught - lose a life
+                                lives--;
+                                updateLivesDisplay();
+                                emoji.classList.add('bad-caught');
+                                playErrorSound();
+                                clearInterval(fallInterval);
+                                emoji.fallInterval = null;
+                                setTimeout(() => emoji.remove(), 300);
+                                
+                                // Check if game over due to no lives
+                                if (lives <= 0) {
+                                    endGame();
+                                }
+                                return;
+                            } else {
+                                // Good emoji caught
+                                caughtCount++;
+                                document.getElementById('score').textContent = caughtCount;
+                                emoji.classList.add('caught');
+                                playCatchSound();
+                                clearInterval(fallInterval);
+                                emoji.fallInterval = null;
+                                setTimeout(() => emoji.remove(), 300);
+                                return;
+                            }
                         }
                         
-                        // Check if missed (reached bottom)
+                        // Check if reached bottom
                         if (posY > catchArea.clientHeight - 40) {
-                            missedCount++;
-                            document.getElementById('missed').textContent = missedCount;
                             playMissSound();
                             clearInterval(fallInterval);
                             emoji.fallInterval = null;
@@ -650,7 +792,6 @@ function endGame() {
     document.getElementById('game-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'block';
     document.getElementById('final-caught').textContent = caughtCount;
-    document.getElementById('final-missed').textContent = missedCount;
     
     // Display leaderboard
     displayLeaderboard();
@@ -798,6 +939,8 @@ window.updateExitModalTranslation = function() {
 // Confirm exit - navigate to games page
 function confirmExit() {
     playClickSound();
+    // Set flag to bypass beforeunload event
+    window.isNavigatingAway = true;
     // Reset game state
     gameActive = false;
     gamePaused = false;
@@ -873,7 +1016,150 @@ function cancelExit() {
                         return;
                     }
                     
-                    // Check if missed (reached bottom)
+                    // Check if reached bottom
+                    if (posY > catchArea.clientHeight - 40) {
+                        playMissSound();
+                        clearInterval(fallInterval);
+                        emoji.fallInterval = null;
+                        emoji.remove();
+                    }
+                }, 20);
+                
+                emoji.fallInterval = fallInterval;
+            }
+        });
+        
+        // Resume spawning with appropriate difficulty and timer from current state
+        spawnEmojisWithDifficulty();
+        timerInterval = setInterval(updateTimer, 1000);
+    });
+}
+
+// Show restart confirmation modal
+function showRestartModal() {
+    if (!gameActive) return;
+    
+    // Pause the game first
+    if (!gamePaused) {
+        clearInterval(spawnInterval);
+        clearInterval(timerInterval);
+        gamePaused = true;
+        
+        const emojis = document.querySelectorAll('.falling-emoji');
+        emojis.forEach(emoji => {
+            emoji.style.animationPlayState = 'paused';
+            if (emoji.fallInterval) {
+                clearInterval(emoji.fallInterval);
+                emoji.fallInterval = null;
+            }
+        });
+    }
+    
+    const modal = document.getElementById('restart-confirmation-modal');
+    modal.style.display = 'flex';
+    updateEmojiCatchRestartModalTranslation();
+    playClickSound();
+}
+
+// Update restart modal translation
+window.updateEmojiCatchRestartModalTranslation = function() {
+    const modal = document.getElementById('restart-confirmation-modal');
+    if (!modal || modal.style.display !== 'flex') return;
+    
+    const titleElement = modal.querySelector('[data-translate="restart_game_title"]');
+    const questionElement = modal.querySelector('[data-translate="restart_game_question"]');
+    const yesBtn = document.getElementById('restart-yes-btn');
+    const noBtn = document.getElementById('restart-no-btn');
+    
+    const titleText = emojiCatchTranslations['restart_game_title'][window.currentLanguage] || 'Restart Game?';
+    const questionText = emojiCatchTranslations['restart_game_question'][window.currentLanguage] || 'Are you sure you want to restart? Your current game will be lost.';
+    const yesText = emojiCatchTranslations['restart_yes'][window.currentLanguage] || 'Yes, Restart';
+    const noText = emojiCatchTranslations['restart_no'][window.currentLanguage] || 'No, Continue Playing';
+    
+    if (titleElement) titleElement.textContent = titleText;
+    if (questionElement) questionElement.textContent = questionText;
+    if (yesBtn) yesBtn.textContent = yesText;
+    if (noBtn) noBtn.textContent = noText;
+};
+
+// Confirm restart
+function confirmRestart() {
+    playClickSound();
+    const modal = document.getElementById('restart-confirmation-modal');
+    modal.style.display = 'none';
+    
+    // Reset game completely
+    gameActive = false;
+    gamePaused = false;
+    clearInterval(spawnInterval);
+    clearInterval(timerInterval);
+    document.getElementById('catch-area').innerHTML = '<div class="basket" id="basket">🧺</div>';
+    
+    // Start fresh game
+    startGame();
+}
+
+// Cancel restart
+function cancelRestart() {
+    const modal = document.getElementById('restart-confirmation-modal');
+    modal.style.display = 'none';
+    playClickSound();
+    
+    // Resume game with countdown
+    const pauseBtn = document.getElementById('pause-btn');
+    const pauseText = emojiCatchTranslations['pause_button'][window.currentLanguage] || '⏸️ Pause';
+    pauseBtn.textContent = pauseText;
+    pauseBtn.classList.remove('paused');
+    
+    document.getElementById('pause-overlay').classList.remove('active');
+    
+    // Don't resume emojis yet - wait for countdown to finish
+    showCountdown(() => {
+        gamePaused = false;
+        isCountingDown = false;
+        
+        // NOW resume all falling emoji animations after countdown
+        const pausedEmojis = document.querySelectorAll('.falling-emoji');
+        pausedEmojis.forEach(emoji => {
+            emoji.style.animationPlayState = 'running';
+            
+            if (!emoji.fallInterval) {
+                let posY = parseFloat(emoji.dataset.posY) || 0;
+                const fallSpeed = parseFloat(emoji.dataset.fallSpeed);
+                const catchArea = document.getElementById('catch-area');
+                const basket = document.getElementById('basket');
+                
+                const fallInterval = setInterval(() => {
+                    if (!gameActive) {
+                        clearInterval(fallInterval);
+                        emoji.remove();
+                        return;
+                    }
+                    
+                    if (gamePaused) {
+                        clearInterval(fallInterval);
+                        emoji.fallInterval = null;
+                        return;
+                    }
+                    
+                    posY += fallSpeed;
+                    emoji.style.top = posY + 'px';
+                    emoji.dataset.posY = posY;
+                    
+                    const emojiRect = emoji.getBoundingClientRect();
+                    const basketRect = basket.getBoundingClientRect();
+                    
+                    if (checkCollision(emojiRect, basketRect)) {
+                        caughtCount++;
+                        document.getElementById('score').textContent = caughtCount;
+                        emoji.classList.add('caught');
+                        playCatchSound();
+                        clearInterval(fallInterval);
+                        emoji.fallInterval = null;
+                        setTimeout(() => emoji.remove(), 300);
+                        return;
+                    }
+                    
                     if (posY > catchArea.clientHeight - 40) {
                         missedCount++;
                         document.getElementById('missed').textContent = missedCount;
@@ -888,7 +1174,6 @@ function cancelExit() {
             }
         });
         
-        // Resume spawning with appropriate difficulty and timer from current state
         spawnEmojisWithDifficulty();
         timerInterval = setInterval(updateTimer, 1000);
     });
@@ -984,28 +1269,47 @@ function triggerConfetti(message) {
 function displayLeaderboard() {
     const leaderboard = JSON.parse(localStorage.getItem('emojiCatchLeaderboard')) || [];
     const list = document.getElementById('leaderboard-list');
-    list.innerHTML = '';
+    const listStart = document.getElementById('leaderboard-list-start');
+    
+    // Clear both lists
+    if (list) list.innerHTML = '';
+    if (listStart) listStart.innerHTML = '';
     
     if (leaderboard.length === 0) {
-        list.innerHTML = '<li style="list-style: none; text-align: center; opacity: 0.6;">No scores yet</li>';
+        const emptyMessage = '<li style="list-style: none; text-align: center; opacity: 0.6;">No scores yet</li>';
+        if (list) list.innerHTML = emptyMessage;
+        if (listStart) listStart.innerHTML = emptyMessage;
         return;
     }
     
     leaderboard.forEach((entry, index) => {
         const li = document.createElement('li');
-        li.innerHTML = `<strong>${entry.name}</strong>: ${entry.score} caught`;
+        const currentLang = window.currentLanguage || 'en';
+        const caughtText = getTranslation('leaderboard_caught', currentLang) || 'caught';
+        li.innerHTML = `<strong>${entry.name}</strong>: ${entry.score} ${caughtText}`;
         if (index === 0) li.style.color = '#ffd700';
         if (index === 1) li.style.color = '#c0c0c0';
         if (index === 2) li.style.color = '#cd7f32';
-        list.appendChild(li);
+        
+        // Add to game-over leaderboard
+        if (list) list.appendChild(li);
+        
+        // Clone and add to start screen leaderboard
+        if (listStart) {
+            const liClone = li.cloneNode(true);
+            listStart.appendChild(liClone);
+        }
     });
 }
+
+// Make displayLeaderboard available globally for language updates
+window.updateEmojiCatchLeaderboard = displayLeaderboard;
 
 // Sound effects
 function playClickSound() {
     if (!window.isMusicMuted) {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
-        audio.volume = 0.2;
+        audio.volume = 0.1;
         audio.play().catch(e => console.log('Audio play failed:', e));
     }
 }
@@ -1013,7 +1317,7 @@ function playClickSound() {
 function playCatchSound() {
     if (!window.isMusicMuted) {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2015/2015-preview.mp3');
-        audio.volume = 0.08;
+        audio.volume = 0.04;
         audio.play().catch(e => console.log('Audio play failed:', e));
     }
 }
@@ -1021,9 +1325,25 @@ function playCatchSound() {
 function playMissSound() {
     if (!window.isMusicMuted) {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3');
-        audio.volume = 0.15;
+        audio.volume = 0.08;
         audio.play().catch(e => console.log('Audio play failed:', e));
     }
+}
+
+// Update lives display with hearts
+function updateLivesDisplay() {
+    const livesContainer = document.getElementById('lives');
+    if (!livesContainer) return;
+    
+    let heartsHTML = '';
+    for (let i = 0; i < 3; i++) {
+        if (i < lives) {
+            heartsHTML += '❤️'; // Red heart for remaining lives
+        } else {
+            heartsHTML += '💔'; // Broken heart for lost lives
+        }
+    }
+    livesContainer.innerHTML = heartsHTML;
 }
 
 function playErrorSound() {
