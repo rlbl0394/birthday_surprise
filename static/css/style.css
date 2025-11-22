@@ -17,6 +17,15 @@ body {
     overflow-y: auto;
     position: relative;
     transition: background 0.8s ease;
+    /* Prevent pull-to-refresh and overscroll on mobile */
+    overscroll-behavior: none;
+    /* Prevent text selection during touch interactions */
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent iOS zoom on double-tap */
+* {
+    touch-action: manipulation;
 }
 
 /* Animated gradient background for games menu */
@@ -1818,6 +1827,17 @@ h1, h2, h3 {
         display: block;
         width: 100%;
     }
+    
+    /* Better touch targets */
+    button, .btn-primary, .btn-secondary {
+        min-height: 44px;
+        padding: 12px 24px;
+    }
+    
+    /* Prevent zooming on input focus */
+    input, select, textarea {
+        font-size: 16px;
+    }
 }
 
 /* ==========================================
@@ -1881,6 +1901,26 @@ h1, h2, h3 {
     .btn-primary, .btn-secondary {
         padding: 15px 30px;
         font-size: 1rem;
+    }
+    
+    .home-content, .ending-content, .message-card {
+        padding: 30px 20px;
+        margin: 10px;
+    }
+    
+    .subtitle, .ending-subtitle {
+        font-size: 1rem;
+    }
+    
+    .message-text {
+        font-size: 1rem;
+    }
+    
+    /* Optimize music toggle and language selector for mobile */
+    .music-toggle, .language-toggle {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
     }
     
     .cake-wish-toast {

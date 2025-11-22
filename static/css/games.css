@@ -76,6 +76,9 @@
     display: flex;
     flex-direction: column;
     min-height: 450px;
+    /* Better touch interaction */
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
 }
 
 /* Fortune Cookie - Spring Theme */
@@ -1542,18 +1545,27 @@
     }
     
     .game-stats {
-        gap: 1rem;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0.5rem;
     }
     
     .stat-item {
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        min-width: 110px;
+    }
+    
+    .pause-btn, .restart-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
     }
     
     .emoji-spawn-area, .catch-area {
-        height: 500px;
-        min-height: 500px;
-        max-height: 500px;
+        height: 400px !important;
+        min-height: 400px !important;
+        max-height: 400px !important;
     }
     
     .fortune-content {
@@ -1564,9 +1576,30 @@
     .fortune-message {
         font-size: 1.1rem;
     }
+    
+    /* Better touch targets for mobile */
+    button, .game-button, .btn-nav, .start-game-btn, .play-again-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Prevent text selection during gameplay */
+    .emoji-spawn-area, .catch-area {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+    }
 }
 
 @media (max-width: 480px) {
+    .games-title {
+        font-size: 1.8rem;
+    }
+    
+    .game-title {
+        font-size: 1.8rem;
+    }
+    
     .cookies-container {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1585,6 +1618,42 @@
     
     .pop-emoji {
         font-size: 2.5rem;
+    }
+    
+    .game-stats {
+        gap: 0.3rem;
+        font-size: 0.85rem;
+    }
+    
+    .stat-item {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+        min-width: 100px;
+    }
+    
+    .multiplier-display {
+        min-width: 70px;
+    }
+    
+    .emoji-spawn-area, .catch-area {
+        height: 350px !important;
+        min-height: 350px !important;
+        max-height: 350px !important;
+    }
+    
+    .game-instructions {
+        font-size: 0.95rem;
+        padding: 0 1rem;
+    }
+    
+    .name-input-box input {
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
+    
+    .start-game-btn, .play-again-btn {
+        font-size: 1rem;
+        padding: 0.8rem 1.5rem;
     }
 }
 

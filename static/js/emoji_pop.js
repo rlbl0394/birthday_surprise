@@ -695,8 +695,14 @@ function spawnEmoji() {
     emoji.style.left = Math.random() * maxX + 'px';
     emoji.style.top = Math.random() * maxY + 'px';
     
-    // Click handler
+    // Click handler for desktop
     emoji.addEventListener('click', () => popEmoji(emoji));
+    
+    // Touch handler for mobile
+    emoji.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevent default touch behavior
+        popEmoji(emoji);
+    }, { passive: false });
     
     spawnArea.appendChild(emoji);
     

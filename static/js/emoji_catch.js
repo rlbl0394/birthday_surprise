@@ -442,6 +442,10 @@ function startGame() {
     // Basket movement with mouse - track entire page
     document.addEventListener('mousemove', moveBasket);
     
+    // Add touch support for mobile
+    document.addEventListener('touchmove', moveBasketTouch, { passive: false });
+    document.addEventListener('touchstart', moveBasketTouch, { passive: false });
+    
     // Show countdown before starting
     showCountdown(() => {
         gameActive = true;
@@ -461,6 +465,26 @@ function moveBasket(e) {
     
     // Calculate position relative to catch area
     basketX = e.clientX - rect.left - 40; // Center basket on cursor
+    
+    // Keep basket within bounds
+    const maxX = catchArea.clientWidth - 80;
+    basketX = Math.max(0, Math.min(basketX, maxX));
+    
+    basket.style.left = basketX + 'px';
+}
+
+// Move basket with touch for mobile
+function moveBasketTouch(e) {
+    if (!gameActive || gamePaused) return;
+    
+    e.preventDefault(); // Prevent scrolling
+    
+    const catchArea = document.getElementById('catch-area');
+    const rect = catchArea.getBoundingClientRect();
+    const touch = e.touches[0];
+    
+    // Calculate position relative to catch area
+    basketX = touch.clientX - rect.left - 40; // Center basket on touch
     
     // Keep basket within bounds
     const maxX = catchArea.clientWidth - 80;
