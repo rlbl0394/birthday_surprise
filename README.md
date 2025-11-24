@@ -146,31 +146,6 @@ birthday_surprise/
   - Classic portrait composition
   - Lighting and color specifications
 
-### Emoji Pop Game
-- Click emojis before they disappear to score points
-- 30-second timer with progressive difficulty
-- No combo or multiplier system (simple scoring)
-- Pause anytime with spacebar or pause button
-- Beat high scores for confetti celebration
-
-### Emoji Catch Game
-- Move basket with mouse anywhere on the page (not limited to game area)
-- Catch falling good emojis while avoiding 5 types of bad emojis (💣☠️👻🔥💀)
-- Bad emojis (15% spawn chance) have red pulsing glow for easy identification
-- Four unique power-ups (🛡️, ⭐, ⚡, ❤️) appear only as power-ups, never as regular emojis, and have a 10% spawn rate with a distinct glow effect
-- Start with 3 lives (hearts ❤️) - lose one for each bad emoji caught
-- **Visual Life Feedback**:
-  - Red border pulse animation when losing a life
-  - Faint heartbreak emoji (💔) popup appears briefly
-  - Prominent continuous red glow warning when only 1 life remains
-- Game ends when all lives are lost
-- Purple/magenta gradient background enhances emoji visibility
-- Focus on maximizing caught emojis while managing your lives strategically
-- Fixed, spacious gameplay box and stats bar for stable UI
-- Pause and restart buttons are always visible
-- Progressive difficulty: Easy mode (1000ms spawn) → Hard mode (600ms spawn)
-- Compete for top leaderboard position
-
 ## 🛠️ Technologies Used
 
 - **Backend**: Flask 3.0.0, Gunicorn (production server)
