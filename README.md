@@ -26,22 +26,28 @@ An elegant, multilingual interactive birthday experience featuring beautiful ani
   - Dynamic difficulty: Game gets harder as multiplier increases
     - x1: 900ms spawn, 3.0s lifetime, 3.0rem size
     - x6: 500ms spawn, 1.5s lifetime, 2.5rem size (fastest)
-  - Rainbow glow effects and visual multiplier popups
-  - Combo meter showing streak progress
-  - High score tracking with local leaderboard
-  - Confetti celebration for new records
+  - **Visual Life Feedback**:
+    - Rainbow glow effects and visual multiplier popups
+    - Combo meter showing streak progress
+    - High score tracking with local leaderboard
+    - Confetti celebration for new records
 - **Emoji Catch**: Strategic catching game with life system
-  - Catch good emojis while avoiding 6 types of bad emojis (💣☠️👻🔥⚡💀)
-  - 3-heart life system - lose a life for each bad emoji caught
-  - Bad emojis feature red pulsing glow animation
-  - Visual feedback when losing lives: red border pulse and faint heartbreak emoji popup
-  - Low-life warning: Prominent red pulsating glow when only 1 life remains
-  - Full-page mouse tracking for basket movement
-  - Purple/magenta gradient background for better emoji visibility
-  - Game over when all lives are lost
-  - Fixed 500px gameplay box with stable UI elements
-  - Dynamic difficulty progression (Easy → Hard mode)
-  - Score tracking with local leaderboard
+  - Move basket with mouse anywhere on the page (not limited to game area)
+  - Catch falling good emojis while avoiding 5 types of bad emojis (💣☠️👻🔥💀)
+  - Bad emojis (15% spawn chance) have red pulsing glow for easy identification
+  - Four unique power-ups (🛡️, ⭐, ⚡, ❤️) appear only as power-ups, never as regular emojis, and have a 10% spawn rate with a distinct glow effect
+  - Start with 3 lives (hearts ❤️) - lose one for each bad emoji caught
+  - **Visual Life Feedback**:
+    - Red border pulse animation when losing a life
+    - Faint heartbreak emoji (💔) popup appears briefly
+    - Prominent continuous red glow warning when only 1 life remains
+  - Game ends when all lives are lost
+  - Purple/magenta gradient background enhances emoji visibility
+  - Focus on maximizing caught emojis while managing your lives strategically
+  - Fixed, spacious gameplay box and stats bar for stable UI
+  - Pause and restart buttons are always visible
+  - Progressive difficulty: Easy mode (1000ms spawn) → Hard mode (600ms spawn)
+  - Compete for top leaderboard position
 
 ### 🎨 Visual Polish
 - **Animated Gradient Backgrounds**: Subtly moving, dancing colors on all pages
