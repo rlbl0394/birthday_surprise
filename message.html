@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Message from {{ message.sender }}{% endblock %}
+
+{% block body_class %}{{ message.theme }}-theme{% endblock %}
+
+{% block content %}
+<div class="message-container">
+    <div class="message-card fade-in-slow">
+        <div class="message-header">
+            <span class="message-number"><span data-translate="message_label">Message</span> {{ message.id }} <span data-translate="message_of">of</span> {{ total }}</span>
+            <h2 class="sender-name" data-sender="{{ message.sender }}"><span data-translate="message_from">From</span> {{ message.sender }}</h2>
+        </div>
+        
+        <!-- Message Image -->
+        {% if message.id == 1 %}
+        <div class="message-image-container" style="font-size: 4rem; text-align: center;">
+            <span title="Narsimlu">🧘☁️</span>
+        </div>
+        {% elif message.id == 2 %}
+        <div class="message-image-container" style="font-size: 4rem; text-align: center;">
+            <span title="Matt">🐱🐾</span>
+        </div>
+        {% elif message.id == 3 %}
+        <div class="message-image-container" style="font-size: 4rem; text-align: center;">
+            <span title="Heather">❤️⚽</span>
+        </div>
+        {% elif message.id == 4 %}
+        <div class="message-image-container" style="font-size: 4rem; text-align: center;">
+            <span title="Becca">🌸🌱</span>
+        </div>
+        {% endif %}
+        
+        <div class="message-body">
+            <p class="message-text{% if message.id in [1, 2] %} message-short{% endif %}" data-translate="message_{{ message.id }}">{{ message.message | replace('\n', '<br>') | safe }}</p>
+        </div>
+        
+        <div class="navigation-buttons">
+            <div class="nav-left">
+                {% if has_prev %}
+                    <a href="{{ url_for('message', message_id=message.id - 1) }}" class="btn-nav btn-prev" data-translate="prev_message">← Previous Message</a>
+                {% else %}
+                    <a href="{{ url_for('home') }}" class="btn-nav btn-home" data-translate="back_home">← Back to Home</a>
+                {% endif %}
+            </div>
+            
+            <div class="nav-right">
+                {% if has_next %}
+                    <a href="{{ url_for('message', message_id=message.id + 1) }}" class="btn-nav btn-next" data-translate="next_message">Next Message →</a>
+                {% else %}
+                    <a href="{{ url_for('ending') }}" class="btn-nav btn-next" data-translate="final_message">Final Message →</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize particles based on the current theme
+    initParticles('{{ message.theme }}');
+    
+    // Add decorative elements to the message box
+    addMessageDecorations('{{ message.theme }}');
+    
+    // Play seasonal sound on page load
+    playSeasonalSound('{{ message.theme }}');
+</script>
+{% endblock %}
