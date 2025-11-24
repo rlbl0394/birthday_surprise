@@ -10,10 +10,21 @@ let countdownInterval;
 let isCountingDown = false;
 let isPauseTransitioning = false;
 let lives = 3;
+// Combo system removed
+let score = 0;
 
-// Falling emoji configuration
-const fallingEmojis = ['🎈', '🎉', '🎊', '🎁', '🌟', '⭐', '💫', '✨', '🎀', '🎂', '🍰', '🧁'];
-const badEmojis = ['💣', '☠️', '👻', '🔥', '⚡', '💀'];
+// Power-up system
+let activePowerUps = {
+    shield: { active: false, endTime: 0 },
+    doublePoints: { active: false, endTime: 0 },
+    speedSlow: { active: false, endTime: 0 }
+};
+const powerUpEmojis = ['🛡️', '⭐', '⚡', '❤️'];
+const powerUpChance = 0.10; // 10% chance to spawn power-up (balanced)
+
+// Falling emoji configuration (exclude all power-up emojis)
+const fallingEmojis = ['🎈', '🎉', '🎊', '🎁', '🌟', '💫', '✨', '🎀', '🎂', '🍰', '🧁'];
+const badEmojis = ['💣', '☠️', '👻', '🔥', '💀']; // ⚡ removed so it is only a power-up
 let basket;
 let basketX = 0;
 
@@ -416,14 +427,29 @@ function validateAndStartGame() {
 // Start game
 function startGame() {
     caughtCount = 0;
+    score = 0;
     timeLeft = 30;
     lives = 3;
+    combo = 0;
+    maxCombo = 0;
     gameActive = false;
     gamePaused = false;
     
-    document.getElementById('score').textContent = caughtCount;
+    // Reset power-ups
+    activePowerUps = {
+        shield: { active: false, endTime: 0 },
+        doublePoints: { active: false, endTime: 0 },
+        speedSlow: { active: false, endTime: 0 }
+    };
+    // Clear power-up display
+    if (document.getElementById('active-powerups')) {
+        document.getElementById('active-powerups').innerHTML = '';
+    }
+    
+    document.getElementById('score').textContent = score;
     document.getElementById('timer').textContent = timeLeft;
     updateLivesDisplay();
+    // updateComboDisplay removed (combo system gone)
     
     // Set pause button text with translation
     const pauseText = emojiCatchTranslations['pause_button'][window.currentLanguage] || '⏸️ Pause';
@@ -441,6 +467,10 @@ function startGame() {
     
     // Basket movement with mouse - track entire page
     document.addEventListener('mousemove', moveBasket);
+    
+    // Add touch support for mobile
+    document.addEventListener('touchmove', moveBasketTouch, { passive: false });
+    document.addEventListener('touchstart', moveBasketTouch, { passive: false });
     
     // Show countdown before starting
     showCountdown(() => {
@@ -469,6 +499,26 @@ function moveBasket(e) {
     basket.style.left = basketX + 'px';
 }
 
+// Move basket with touch for mobile
+function moveBasketTouch(e) {
+    if (!gameActive || gamePaused) return;
+    
+    e.preventDefault(); // Prevent scrolling
+    
+    const catchArea = document.getElementById('catch-area');
+    const rect = catchArea.getBoundingClientRect();
+    const touch = e.touches[0];
+    
+    // Calculate position relative to catch area
+    basketX = touch.clientX - rect.left - 40; // Center basket on touch
+    
+    // Keep basket within bounds
+    const maxX = catchArea.clientWidth - 80;
+    basketX = Math.max(0, Math.min(basketX, maxX));
+    
+    basket.style.left = basketX + 'px';
+}
+
 // Spawn falling emoji
 function spawnFallingEmoji() {
     if (!gameActive) return;
@@ -476,13 +526,25 @@ function spawnFallingEmoji() {
     const catchArea = document.getElementById('catch-area');
     const emoji = document.createElement('div');
     
-    // 30% chance to spawn bad emoji
-    const isBadEmoji = Math.random() < 0.3;
-    emoji.className = isBadEmoji ? 'falling-emoji bad-emoji' : 'falling-emoji';
-    emoji.textContent = isBadEmoji 
-        ? badEmojis[Math.floor(Math.random() * badEmojis.length)]
-        : fallingEmojis[Math.floor(Math.random() * fallingEmojis.length)];
-    emoji.dataset.isBad = isBadEmoji;
+    // Check if should spawn power-up (8% chance)
+    const shouldSpawnPowerUp = Math.random() < powerUpChance;
+    
+    if (shouldSpawnPowerUp) {
+        // Spawn power-up
+        const powerUpType = powerUpEmojis[Math.floor(Math.random() * powerUpEmojis.length)];
+        emoji.className = 'falling-emoji powerup-emoji';
+        emoji.textContent = powerUpType;
+        emoji.dataset.isPowerUp = 'true';
+        emoji.dataset.powerUpType = getPowerUpType(powerUpType);
+    } else {
+        // 15% chance to spawn bad emoji (less than power-ups)
+        const isBadEmoji = Math.random() < 0.15;
+        emoji.className = isBadEmoji ? 'falling-emoji bad-emoji' : 'falling-emoji';
+        emoji.textContent = isBadEmoji 
+            ? badEmojis[Math.floor(Math.random() * badEmojis.length)]
+            : fallingEmojis[Math.floor(Math.random() * fallingEmojis.length)];
+        emoji.dataset.isBad = isBadEmoji;
+    }
     
     // Random horizontal position
     const maxX = catchArea.clientWidth - 40;
@@ -500,7 +562,9 @@ function spawnFallingEmoji() {
     // Animate falling
     let posY = 0;
     // Easy mode: slower speed (2-4), Hard mode: faster speed (4-7)
-    const fallSpeed = isHardMode ? 4 + Math.random() * 3 : 2 + Math.random() * 2;
+    // Speed slow power-up reduces speed by 50%
+    let baseSpeed = isHardMode ? 4 + Math.random() * 3 : 2 + Math.random() * 2;
+    const fallSpeed = activePowerUps.speedSlow.active ? baseSpeed * 0.5 : baseSpeed;
     
     // Store current position on emoji element for pause/resume
     emoji.dataset.posY = '0';
@@ -530,15 +594,33 @@ function spawnFallingEmoji() {
             
             if (checkCollision(emojiRect, basketRect)) {
                 const isBadEmoji = emoji.dataset.isBad === 'true';
+                const isPowerUp = emoji.dataset.isPowerUp === 'true';
                 
-                if (isBadEmoji) {
-                    // Bad emoji caught - lose a life
-                    lives--;
-                    updateLivesDisplay();
-                    showHeartbreakPopup();
-                    showLifeLostEffect();
-                    emoji.classList.add('bad-caught');
-                    playErrorSound();
+                if (isPowerUp) {
+                    // Power-up caught!
+                    const powerUpType = emoji.dataset.powerUpType;
+                    activatePowerUp(powerUpType);
+                    emoji.classList.add('caught');
+                    playPowerUpCatchSound();
+                    clearInterval(fallInterval);
+                    emoji.fallInterval = null;
+                    setTimeout(() => emoji.remove(), 300);
+                } else if (isBadEmoji) {
+                    // Bad emoji caught - check shield first
+                    if (activePowerUps.shield.active) {
+                        // Shield blocks the bad emoji!
+                        deactivatePowerUp('shield');
+                        playShieldBlockSound();
+                        emoji.classList.add('blocked');
+                    } else {
+                        // No shield - lose a life
+                        lives--;
+                        updateLivesDisplay();
+                        showHeartbreakPopup();
+                        showLifeLostEffect();
+                        emoji.classList.add('bad-caught');
+                        playErrorSound();
+                    }
                     clearInterval(fallInterval);
                     emoji.fallInterval = null;
                     setTimeout(() => emoji.remove(), 300);
@@ -549,11 +631,14 @@ function spawnFallingEmoji() {
                     }
                     return;
                 } else {
-                    // Good emoji caught
+                    // Good emoji caught - increase score
+                    let points = 1;
+                    if (activePowerUps.doublePoints.active) points *= 2;
                     caughtCount++;
-                    document.getElementById('score').textContent = caughtCount;
+                    score += points;
+                    document.getElementById('score').textContent = score;
                     emoji.classList.add('caught');
-                    playCatchSound();
+                    playGoodCatchSound();
                     clearInterval(fallInterval);
                     emoji.fallInterval = null;
                     setTimeout(() => emoji.remove(), 300);
@@ -561,9 +646,8 @@ function spawnFallingEmoji() {
                 }
             }
             
-            // Check if reached bottom
+            // Check if reached bottom (missed good emoji or power-up)
             if (posY > catchArea.clientHeight - 40) {
-                playMissSound();
                 clearInterval(fallInterval);
                 emoji.fallInterval = null;
                 emoji.remove();
@@ -592,6 +676,109 @@ function spawnEmojisWithDifficulty() {
     spawnInterval = setInterval(spawnFallingEmoji, spawnRate);
 }
 
+// Get power-up type from emoji
+function getPowerUpType(emojiChar) {
+    switch(emojiChar.trim()) {
+        case '🛡️': return 'shield';
+        case '⭐': return 'doublePoints';
+        case '⚡': return 'speedSlow';
+        case '❤️': return 'extraLife';
+        default: return null;
+    }
+}
+
+// Activate power-up effect
+function activatePowerUp(type) {
+    playPowerUpActivateSound();
+    
+    if (type === 'extraLife') {
+        // Extra life is instant
+        lives++;
+        document.getElementById('lives').textContent = lives;
+        showPowerUpNotification('Extra Life! +1 ❤️');
+        return;
+    }
+    
+    // Deactivate existing power-up of the same type
+    if (activePowerUps[type].active) {
+        clearTimeout(activePowerUps[type].timeout);
+    }
+    
+    // Activate power-up
+    activePowerUps[type].active = true;
+    activePowerUps[type].endTime = Date.now() + 10000; // 10 seconds
+    
+    // Show notification
+    const notifications = {
+        shield: 'Shield Active! 🛡️',
+        doublePoints: 'Double Points! ⭐',
+        speedSlow: 'Slow Motion! ⚡'
+    };
+    showPowerUpNotification(notifications[type]);
+    
+    // Update UI
+    updatePowerUpDisplay();
+    
+    // Set timeout to deactivate
+    activePowerUps[type].timeout = setTimeout(() => {
+        deactivatePowerUp(type);
+    }, 10000);
+}
+
+// Deactivate power-up effect
+function deactivatePowerUp(type) {
+    activePowerUps[type].active = false;
+    activePowerUps[type].endTime = 0;
+    updatePowerUpDisplay();
+}
+
+// Combo system removed
+
+// Update power-up display
+function updatePowerUpDisplay() {
+    const powerUpContainer = document.getElementById('active-powerups');
+    const catchArea = document.getElementById('catch-area');
+    if (!powerUpContainer) return;
+    
+    powerUpContainer.innerHTML = '';
+    
+    const powerUpIcons = {
+        shield: '🛡️',
+        doublePoints: '⭐',
+        speedSlow: '⚡'
+    };
+    
+    let hasActivePowerUp = false;
+    for (const [type, data] of Object.entries(activePowerUps)) {
+        if (data.active && powerUpIcons[type]) {
+            const powerUpDiv = document.createElement('div');
+            powerUpDiv.className = 'active-powerup';
+            powerUpDiv.textContent = powerUpIcons[type];
+            powerUpContainer.appendChild(powerUpDiv);
+            hasActivePowerUp = true;
+        }
+    }
+    
+    // Toggle rainbow glow on catch area
+    if (catchArea) {
+        if (hasActivePowerUp) {
+            catchArea.classList.add('powerup-active');
+        } else {
+            catchArea.classList.remove('powerup-active');
+        }
+    }
+}
+
+// Show power-up notification
+function showPowerUpNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'powerup-notification';
+    notification.textContent = message;
+    document.getElementById('catch-area').appendChild(notification);
+    
+    setTimeout(() => notification.remove(), 2000);
+}
+
 // Check collision between emoji and basket
 function checkCollision(rect1, rect2) {
     return !(rect1.right < rect2.left || 
@@ -618,13 +805,15 @@ function updateTimer() {
 // Show countdown (3, 2, 1, GO!)
 function showCountdown(callback) {
     isCountingDown = true;
+    // Clear power-up display before countdown
+    if (document.getElementById('active-powerups')) {
+        document.getElementById('active-powerups').innerHTML = '';
+    }
     const overlay = document.getElementById('countdown-overlay');
     const numberElement = document.getElementById('countdown-number');
     overlay.style.display = 'flex';
-    
     let count = 3;
     numberElement.textContent = count;
-    
     countdownInterval = setInterval(() => {
         count--;
         if (count > 0) {
@@ -787,21 +976,26 @@ function endGame() {
     gameActive = false;
     clearInterval(spawnInterval);
     clearInterval(timerInterval);
-    
+
     // Clear falling emojis
     document.querySelectorAll('.falling-emoji').forEach(emoji => emoji.remove());
-    
+
+    // Clear power-up display at game over
+    if (document.getElementById('active-powerups')) {
+        document.getElementById('active-powerups').innerHTML = '';
+    }
+
     // Save score to leaderboard (only highest score per player)
     saveScore(playerName, caughtCount);
-    
+
     // Show game over screen
     document.getElementById('game-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'block';
     document.getElementById('final-caught').textContent = caughtCount;
-    
+
     // Display leaderboard
     displayLeaderboard();
-    
+
     playGameOverSound();
 }
 
@@ -1324,6 +1518,52 @@ function playCatchSound() {
     if (!window.isMusicMuted) {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2015/2015-preview.mp3');
         audio.volume = 0.04;
+        audio.play().catch(e => console.log('Audio play failed:', e));
+    }
+}
+
+// Subtle good catch sound (soft chime)
+function playGoodCatchSound() {
+    if (!window.isMusicMuted) {
+        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+        audio.volume = 0.03;
+        audio.play().catch(e => console.log('Audio play failed:', e));
+    }
+}
+
+// Power-up catch sound (soft notification)
+function playPowerUpCatchSound() {
+    if (!window.isMusicMuted) {
+        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/1999/1999-preview.mp3');
+        audio.volume = 0.05;
+        audio.play().catch(e => console.log('Audio play failed:', e));
+    }
+}
+
+// Power-up activate sound (gentle tone)
+function playPowerUpActivateSound() {
+    if (!window.isMusicMuted) {
+        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3');
+        audio.volume = 0.04;
+        audio.play().catch(e => console.log('Audio play failed:', e));
+    }
+}
+
+// Shield block sound (soft)
+function playShieldBlockSound() {
+    if (!window.isMusicMuted) {
+        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+        audio.volume = 0.03;
+        audio.play().catch(e => console.log('Audio play failed:', e));
+    }
+}
+
+// Combo milestone sound (gentle escalation)
+function playComboSound(comboCount) {
+    if (!window.isMusicMuted) {
+        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/1997/1997-preview.mp3');
+        // Slightly increase volume at higher combos
+        audio.volume = 0.03 + (comboCount / 100);
         audio.play().catch(e => console.log('Audio play failed:', e));
     }
 }

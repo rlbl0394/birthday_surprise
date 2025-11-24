@@ -1,37 +1,33 @@
 {% extends "base.html" %}
 
-{% block title %}Becca's Game Collection{% endblock %}
+{% block title %}Happy Birthday Michelle!{% endblock %}
 
-{% block body_class %}games-menu-bg{% endblock %}
+{% block body_class %}autumn-base home-page{% endblock %}
 
 {% block content %}
-<div class="games-menu-container">
-    <h1 class="games-title" data-translate="games_title">🎮 Becca's Game Collection</h1>
-    <p class="games-subtitle" data-translate="games_subtitle">Choose a game to play!</p>
-    
-    <div class="games-grid">
-        <div class="game-card">
-            <div class="game-icon">🥠</div>
-            <h2 data-translate="fortune_cookie_title">Fortune Cookie</h2>
-            <p data-translate="fortune_cookie_desc">Open fortune cookies to reveal inspirational messages!</p>
-            <a href="/fortune_cookie" class="game-button" data-translate="play_button" onmouseenter="playHoverSound()" onclick="playClickSound()">Play</a>
+<div class="home-container fade-in">
+    <div class="home-content">
+        <div class="profile-image-container">
+            <img src="{{ url_for('static', filename='images/michelle.png') }}" alt="Michelle" class="profile-image">
         </div>
-        
-        <div class="game-card">
-            <div class="game-icon">💥</div>
-            <h2 data-translate="emoji_pop_title">Emoji Pop</h2>
-            <p data-translate="emoji_pop_desc">Click emojis fast to build combos! Difficulty increases with your multiplier - reach 6x for maximum challenge in 30 seconds!</p>
-            <a href="/emoji_pop" class="game-button" data-translate="play_button" onmouseenter="playHoverSound()" onclick="playClickSound()">Play</a>
-        </div>
-        
-        <div class="game-card">
-            <div class="game-icon">🧺</div>
-            <h2 data-translate="emoji_catch_title">Emoji Catch</h2>
-            <p data-translate="emoji_catch_desc">Catch good emojis and dodge glowing red bad ones! Manage 3 lives with visual warnings - survive to the end!</p>
-            <a href="/emoji_catch" class="game-button" data-translate="play_button" onmouseenter="playHoverSound()" onclick="playClickSound()">Play</a>
-        </div>
+        <h1 class="birthday-title" data-translate="home_title">Happy Birthday,<br><span class="name-highlight">Michelle!</span></h1>
+        <p class="subtitle" data-translate="home_subtitle">Here is a special surprise from your team</p>
+        <a href="{{ url_for('message', message_id=1) }}" class="btn-primary" data-translate="home_button">
+            Begin Your Birthday Surprise
+        </a>
+        <a href="{{ url_for('games') }}" class="btn-primary btn-secondary btn-games" data-translate="play_games" style="margin-top: 15px;">
+            🎮 Play Games
+        </a>
     </div>
 </div>
+{% endblock %}
 
-<script src="{{ url_for('static', filename='js/games.js') }}"></script>
+{% block extra_js %}
+<script>
+    // Initialize mixed seasonal particles for home page
+    initMixedParticles();
+    
+    // Play birthday song
+    playBirthdaySong();
+</script>
 {% endblock %}

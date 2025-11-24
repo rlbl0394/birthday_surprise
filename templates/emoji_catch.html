@@ -10,7 +10,7 @@
     
     <!-- Name Input Screen -->
     <div class="name-input-screen" id="name-input-screen">
-        <p class="game-instructions" data-translate="emoji_catch_instructions">Move your basket anywhere on screen to catch falling good emojis! Avoid the 6 types of glowing red bad emojis (💣☠️👻🔥⚡💀). Start with 3 hearts - lose one per bad catch. Visual warnings show when danger is near!</p>
+        <p class="game-instructions" data-translate="emoji_catch_instructions">Move your basket anywhere on screen to catch falling good emojis! Avoid the 5 types of glowing red bad emojis (💣☠️👻🔥💀). Start with 3 hearts - lose one per bad catch. Visual warnings show when danger is near!</p>
         <div class="name-input-box">
             <label for="player-name" data-translate="enter_name">Enter Your Name:</label>
             <input type="text" id="player-name" maxlength="20" placeholder="Your name">
@@ -45,6 +45,11 @@
             <button class="pause-btn" id="pause-btn" data-translate="pause_button">⏸️ Pause</button>
             <button class="restart-btn" id="restart-btn" onclick="showRestartModal()" data-translate="restart_button">🔄 Restart</button>
         </div>
+        
+        <!-- Active Power-ups Display -->
+        <div class="active-powerups" id="active-powerups"></div>
+        
+        <!-- Combo Display removed -->
         
         <div class="countdown-overlay" id="countdown-overlay" style="display: none;">
             <div class="countdown-number" id="countdown-number">3</div>

@@ -413,7 +413,16 @@ function generateCookies() {
     const cookie = document.createElement('div');
     cookie.className = 'fortune-cookie';
     cookie.innerHTML = '🥠';
+    
+    // Click handler for desktop
     cookie.addEventListener('click', () => openCookie(cookie));
+    
+    // Touch handler for mobile
+    cookie.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        openCookie(cookie);
+    }, { passive: false });
+    
     container.appendChild(cookie);
 }
 

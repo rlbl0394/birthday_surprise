@@ -695,8 +695,14 @@ function spawnEmoji() {
     emoji.style.left = Math.random() * maxX + 'px';
     emoji.style.top = Math.random() * maxY + 'px';
     
-    // Click handler
+    // Click handler for desktop
     emoji.addEventListener('click', () => popEmoji(emoji));
+    
+    // Touch handler for mobile
+    emoji.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevent default touch behavior
+        popEmoji(emoji);
+    }, { passive: false });
     
     spawnArea.appendChild(emoji);
     
@@ -758,8 +764,11 @@ function spawnEmoji() {
 function popEmoji(emoji) {
     if (!gameActive || gamePaused) return;
     
+    // Prevent double-counting from both click and touch events
+    if (emoji.dataset.popped === 'true') return;
+    emoji.dataset.popped = 'true';
+    
     const currentTime = Date.now();
-    const previousStreak = streak;
     
     // Check if streak continues (within 2 seconds of last pop)
     if (currentTime - lastPopTime <= streakTimeout) {
@@ -770,6 +779,7 @@ function popEmoji(emoji) {
     lastPopTime = currentTime;
     
     // Calculate multiplier based on streak (every 5 pops), capped at 6x
+    // streak 1-4 = x1, 5-9 = x2, 10-14 = x3, 15-19 = x4, 20-24 = x5, 25+ = x6
     const previousMultiplier = multiplier;
     multiplier = Math.min(1 + Math.floor(streak / 5), 6);
     
@@ -827,8 +837,16 @@ function updateRainbowGlow() {
 
 // Show multiplier popup when threshold is crossed
 function showMultiplierPopup(multiplierValue) {
-    const popup = document.getElementById('multiplier-popup');
-    if (!popup) return;
+    let popup = document.getElementById('multiplier-popup');
+    
+    // If popup doesn't exist (removed by accident), recreate it
+    if (!popup) {
+        const spawnArea = document.getElementById('emoji-spawn-area');
+        popup = document.createElement('div');
+        popup.id = 'multiplier-popup';
+        popup.className = 'multiplier-popup';
+        spawnArea.appendChild(popup);
+    }
     
     // Update text
     popup.textContent = `x${multiplierValue}`;
@@ -922,10 +940,12 @@ function endGame() {
     clearInterval(timerInterval);
     clearInterval(countdownInterval);
     
-    // Clear remaining emojis and remove rainbow glow
+    // Clear remaining emojis but preserve multiplier popup
     const spawnArea = document.getElementById('emoji-spawn-area');
-    spawnArea.innerHTML = '';
+    const emojis = spawnArea.querySelectorAll('.pop-emoji');
+    emojis.forEach(emoji => emoji.remove());
     spawnArea.classList.remove('rainbow-glow');
+    spawnArea.classList.remove('glow-pulse');
     spawnArea.style.boxShadow = '';
     
     // Save score to leaderboard
