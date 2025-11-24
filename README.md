@@ -118,7 +118,6 @@ birthday_surprise/
 │   │   ├── emoji_pop.js       # Emoji Pop game with pause/leaderboard
 │   │   └── emoji_catch.js     # Emoji Catch game with pause/leaderboard
 │   └── images/
-│       ├── michelle.png       # Profile image for ending page
 │       ├── cat_yoga.png       # AI-generated Cat Yoga team outing illustration
 │       └── team_portrait.png  # AI-generated Team Portrait
 └── templates/
@@ -209,3 +208,4 @@ Edit animated gradients in `static/css/style.css` (search for `@keyframes gradie
 
 **Live Demo**: [https://birthday-surprise-515r.onrender.com/]
 **Repository**: [https://github.com/rlbl0394/birthday_surprise]
+
