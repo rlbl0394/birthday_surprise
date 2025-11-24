@@ -14,20 +14,20 @@
         
         <!-- Message Image -->
         {% if message.id == 1 %}
-        <div class="message-image-container">
-            <img src="{{ url_for('static', filename='images/narsimlu.png') }}" alt="Narsimlu" class="message-image summer-border">
+        <div class="message-image-container" style="font-size: 4rem; text-align: center;">
+            <span title="Narsimlu">🧘☁️</span>
         </div>
         {% elif message.id == 2 %}
-        <div class="message-image-container">
-            <img src="{{ url_for('static', filename='images/matt.png') }}" alt="Matt" class="message-image autumn-border">
+        <div class="message-image-container" style="font-size: 4rem; text-align: center;">
+            <span title="Matt">🐱🐾</span>
         </div>
         {% elif message.id == 3 %}
-        <div class="message-image-container">
-            <img src="{{ url_for('static', filename='images/heather.png') }}" alt="Heather" class="message-image winter-border">
+        <div class="message-image-container" style="font-size: 4rem; text-align: center;">
+            <span title="Heather">❤️⚽</span>
         </div>
         {% elif message.id == 4 %}
-        <div class="message-image-container">
-            <img src="{{ url_for('static', filename='images/becca.png') }}" alt="Becca" class="message-image spring-border">
+        <div class="message-image-container" style="font-size: 4rem; text-align: center;">
+            <span title="Becca">🌸🌱</span>
         </div>
         {% endif %}
         

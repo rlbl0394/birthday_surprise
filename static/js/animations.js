@@ -144,7 +144,7 @@ function translatePage(targetLang) {
 function translateName(name, lang) {
     const nameTranslations = {
         'Michelle': {
-            'en': 'Michelle',
+            'en': '👸🧁', // Michelle: queen and cupcake
             'es': 'Michelle',
             'zh': '米歇尔',
             'fr': 'Michelle',
@@ -153,7 +153,7 @@ function translateName(name, lang) {
             'ja': 'ミシェル'
         },
         'Narsimlu': {
-            'en': 'Narsimlu',
+            'en': '🧘☁️', // Narsimlu: yoga and cloud
             'es': 'Narsimlu',
             'zh': '纳西姆鲁',
             'fr': 'Narsimlu',
@@ -162,7 +162,7 @@ function translateName(name, lang) {
             'ja': 'ナルシムル'
         },
         'Matt': {
-            'en': 'Matt',
+            'en': '🐱🐾', // Matt: cat and paw prints
             'es': 'Mateo',
             'zh': '马特',
             'fr': 'Matthieu',
@@ -171,7 +171,7 @@ function translateName(name, lang) {
             'ja': 'マット'
         },
         'Heather': {
-            'en': 'Heather',
+            'en': '❤️⚽', // Heather: heart and soccer
             'es': 'Heather',
             'zh': '希瑟',
             'fr': 'Heather',
@@ -180,7 +180,7 @@ function translateName(name, lang) {
             'ja': 'ヘザー'
         },
         'Rebecca': {
-            'en': 'Rebecca',
+            'en': '🌸🌱', // Becca: cherry blossom, sprout
             'es': 'Rebeca',
             'zh': '丽贝卡',
             'fr': 'Rébecca',
@@ -483,13 +483,13 @@ function getTranslation(key, lang) {
         },
         // Cat Yoga prompt content
         'cat_yoga_intro': {
-            'en': 'Create 2D animated images depicting the five individuals from the reference photo in a bright, serene public park during a pleasant morning. They are enjoying each other\'s company while participating in cat yoga.',
-            'es': 'Crea imágenes animadas en 2D que representen a las cinco personas de la foto de referencia en un parque público luminoso y sereno durante una agradable mañana. Están disfrutando de la compañía mutua mientras participan en yoga con gatos.',
-            'zh': '创作2D动画图像，描绘参考照片中的五个人在一个明亮宁静的公共公园里度过愉快的早晨。他们一起享受猫咪瑜伽的乐趣。',
-            'fr': 'Créez des images animées 2D représentant les cinq personnes de la photo de référence dans un parc public lumineux et serein pendant une agréable matinée. Ils profitent de la compagnie les uns des autres tout en participant au yoga avec des chats.',
-            'hi': '2D एनिमेटेड छवियां बनाएं जो संदर्भ फोटो के पांच व्यक्तियों को एक सुखद सुबह के दौरान एक उज्ज्वल, शांत सार्वजनिक पार्क में दिखाती हैं। वे कैट योग में भाग लेते हुए एक-दूसरे की संगति का आनंद ले रहे हैं।',
-            'tl': 'Lumikha ng 2D animated na mga larawan na nagpapakita ng limang indibidwal mula sa reference photo sa isang maliwanag, payapang pampublikong parke sa isang kaaya-ayang umaga. Nag-eenjoy sila sa kompanya ng isa\'t isa habang lumalahok sa cat yoga.',
-            'ja': '参照写真の5人を、心地よい朝の明るく穏やかな公共公園で描いた2Dアニメーション画像を作成してください。彼らはキャットヨガに参加しながら、お互いの会社を楽しんでいます。'
+            'en': 'Create 2D animated images depicting five individuals in a bright, serene public park during a pleasant morning. They are enjoying each other\'s company while participating in cat yoga.',
+            'es': 'Crea imágenes animadas en 2D que representen a cinco personas en un parque público luminoso y sereno durante una agradable mañana. Están disfrutando de la compañía mutua mientras participan en yoga con gatos.',
+            'zh': '创作2D动画图像，描绘五个人在一个明亮宁静的公共公园里度过愉快的早晨。他们一起享受猫咪瑜伽的乐趣。',
+            'fr': 'Créez des images animées 2D représentant cinq personnes dans un parc public lumineux et serein pendant une agréable matinée. Ils profitent de la compagnie les uns des autres tout en participant au yoga avec des chats.',
+            'hi': '2D एनिमेटेड छवियां बनाएं जो पांच व्यक्तियों को एक सुखद सुबह के दौरान एक उज्ज्वल, शांत सार्वजनिक पार्क में दिखाती हैं। वे कैट योग में भाग लेते हुए एक-दूसरे की संगति का आनंद ले रहे हैं।',
+            'tl': 'Lumikha ng 2D animated na mga larawan na nagpapakita ng limang indibidwal sa isang maliwanag, payapang pampublikong parke sa isang kaaya-ayang umaga. Nag-eenjoy sila sa kompanya ng isa\'t isa habang lumalahok sa cat yoga.',
+            'ja': '明るく穏やかな公共公園で心地よい朝を過ごす5人を描いた2Dアニメーション画像を作成してください。彼らはキャットヨガに参加しながら、お互いの会社を楽しんでいます。'
         },
         'cat_yoga_person1': {
             'en': 'Person 1 (North American male) — tallest',
@@ -583,22 +583,22 @@ function getTranslation(key, lang) {
         },
         // Team Portrait prompt content
         'team_portrait_intro': {
-            'en': 'Create a polished, semi-realistic anime-style team portrait featuring the five individuals from the reference image. The portrait should be clean, professional, and cohesive in tone.',
-            'es': 'Crea un retrato de equipo pulido, semi-realista en estilo anime que presente a las cinco personas de la imagen de referencia. El retrato debe ser limpio, profesional y cohesivo en tono.',
-            'zh': '创作一幅精致、半写实的动漫风格团队肖像，以参考图像中的五个人为特色。肖像应该干净、专业、色调统一。',
-            'fr': 'Créez un portrait d\'équipe poli, semi-réaliste de style anime mettant en vedette les cinq personnes de l\'image de référence. Le portrait doit être propre, professionnel et cohérent dans le ton.',
-            'hi': 'संदर्भ छवि से पांच व्यक्तियों को प्रदर्शित करते हुए एक पॉलिश, अर्ध-यथार्थवादी एनीमे-शैली की टीम पोर्ट्रेट बनाएं। पोर्ट्रेट स्वच्छ, पेशेवर और स्वर में सुसंगत होना चाहिए।',
-            'tl': 'Lumikha ng isang pinakintab, semi-realistic anime-style na larawan ng koponan na nagtatampok sa limang indibidwal mula sa reference image. Ang larawan ay dapat malinis, propesyonal, at magkakaugnay sa tono.',
-            'ja': '参照画像の5人をフィーチャーした、洗練された半写実的なアニメスタイルのチームポートレートを作成してください。ポートレートは、クリーンでプロフェッショナル、トーンが統一されている必要があります。'
+            'en': 'Create a polished, semi-realistic anime-style team portrait featuring five individuals. The portrait should be clean, professional, and cohesive in tone.',
+            'es': 'Crea un retrato de equipo pulido, semi-realista en estilo anime que presente a cinco personas. El retrato debe ser limpio, profesional y cohesivo en tono.',
+            'zh': '创作一幅精致、半写实的动漫风格团队肖像，以五个人为特色。肖像应该干净、专业、色调统一。',
+            'fr': 'Créez un portrait d\'équipe poli, semi-réaliste de style anime mettant en vedette cinq personnes. Le portrait doit être propre, professionnel et cohérent dans le ton.',
+            'hi': 'पांच व्यक्तियों को प्रदर्शित करते हुए एक पॉलिश, अर्ध-यथार्थवादी एनीमे-शैली की टीम पोर्ट्रेट बनाएं। पोर्ट्रेट स्वच्छ, पेशेवर और स्वर में सुसंगत होना चाहिए।',
+            'tl': 'Lumikha ng isang pinakintab, semi-realistic anime-style na larawan ng koponan na nagtatampok sa limang indibidwal. Ang larawan ay dapat malinis, propesyonal, at magkakaugnay sa tono.',
+            'ja': '5人をフィーチャーした、洗練された半写実的なアニメスタイルのチームポートレートを作成してください。ポートレートは、クリーンでプロフェッショナル、トーンが統一されている必要があります。'
         },
         'team_portrait_detail1': {
-            'en': 'Characters must retain recognizable features from the original photo.',
-            'es': 'Los personajes deben conservar características reconocibles de la foto original.',
-            'zh': '角色必须保留原始照片中可识别的特征。',
-            'fr': 'Les personnages doivent conserver des caractéristiques reconnaissables de la photo originale.',
-            'hi': 'पात्रों को मूल फोटो से पहचानने योग्य विशेषताओं को बनाए रखना चाहिए।',
-            'tl': 'Ang mga karakter ay dapat mapanatili ang nakikilalang mga katangian mula sa orihinal na larawan.',
-            'ja': 'キャラクターは、元の写真から認識可能な特徴を保持する必要があります。'
+            'en': 'Characters must retain unique, recognizable features.',
+            'es': 'Los personajes deben conservar características únicas y reconocibles.',
+            'zh': '角色必须保留独特且可识别的特征。',
+            'fr': 'Les personnages doivent conserver des caractéristiques uniques et reconnaissables.',
+            'hi': 'पात्रों को अद्वितीय और पहचानने योग्य विशेषताओं को बनाए रखना चाहिए।',
+            'tl': 'Ang mga karakter ay dapat mapanatili ang natatangi at madaling makilalang mga katangian.',
+            'ja': 'キャラクターは、ユニークで認識可能な特徴を保持する必要があります。'
         },
         'team_portrait_detail2': {
             'en': 'Arrange the group in a classic portrait composition. The overall mood should be warm, unified, and professional. Something suitable for representing a team or family group.',
